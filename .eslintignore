@@ -1,5 +1,0 @@
-**/dist/**
-**/node_modules/**
-test/tests.js
-webpack.config.js
-temp

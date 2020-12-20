@@ -9,10 +9,12 @@ const getTransferableParams = (params = []) =>
     (x instanceof ImageBitmap)
   ));
 
-export default function wasmWorker(source, options = {}) {
+export default function wascWorker(source, options: any = {}) {
   let currentId = 0;
   const promises = {};
   const { getImportObject, ...otherOptions } = options;
+
+  console.info(`"${getImportObject}"`);
 
   const worker = new Worker(
     `data:,ACTIONS=${JSON.stringify(ACTIONS)};getImportObject=${getImportObject};` +
