@@ -1,32 +1,29 @@
-# wasm-worker
+# wasc-worker
 
-[![Build Status](https://travis-ci.org/mbasso/wasm-worker.svg?branch=master)](https://travis-ci.org/mbasso/wasm-worker)
-[![npm version](https://img.shields.io/npm/v/wasm-worker.svg)](https://www.npmjs.com/package/wasm-worker)
-[![npm downloads](https://img.shields.io/npm/dm/wasm-worker.svg?maxAge=2592000)](https://www.npmjs.com/package/wasm-worker)
-[![MIT](https://img.shields.io/npm/l/wasm-worker.svg)](https://github.com/mbasso/wasm-worker/blob/master/LICENSE.md)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/BassoMatteo)
+is a custom fork of:
+### wasm-worker
+#### Please see Authors and Copyright below!
 
-> Move a WebAssembly module into its own thread
+> Move a AssemblyScript module into its own thread
 
-
-_wasm-worker only supports browser environments, since it uses [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers). For use in a NodeJS environment, Web Workers must be polyfilled using a library like [node-webworker](https://github.com/pgriess/node-webworker)._
+_wasc-worker only supports browser environments, since it uses [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers). For use in a NodeJS environment, Web Workers must be polyfilled using a library like [node-webworker](https://github.com/pgriess/node-webworker)._
 
 ## Installation
 
-You can install wasm-worker using [npm](https://www.npmjs.com/package/wasm-worker):
+You can install wasc-worker using @TODO
 
 ```bash
-npm install --save wasm-worker
+npm install --save @TODO
 ```
 
 If you aren't using npm in your project, you can include wasmWorker using UMD build in the dist folder with `<script>` tag.
 
 ## Usage
 
-Once you have installed wasm-worker, supposing a CommonJS environment, you can import and use it in this way:
+Once you have installed wasc-worker, supposing a CommonJS environment, you can import and use it in this way:
 
 ```js
-import wasmWorker from 'wasm-worker';
+import wasmWorker from 'wasc-worker';
 
 // supposing an "add.wasm" module that exports a single function "add"
 wasmWorker('add.wasm')
@@ -100,7 +97,7 @@ wasmWorker(bufferSource: TypedArray | ArrayBuffer, options?: Options): Promise<W
 
 ## Browser support
 
-`wasm-worker` uses [fetch](https://developer.mozilla.org/it/docs/Web/API/Fetch_API), [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) and obviously [WebAssembly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly) APIs, they are broadly supported by major browser engines but you would like to polyfill them to support old versions.
+`wasc-worker` uses [fetch](https://developer.mozilla.org/it/docs/Web/API/Fetch_API), [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) and obviously [WebAssembly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly) APIs, they are broadly supported by major browser engines but you would like to polyfill them to support old versions.
 
 ```js
 if (!window.fetch || !window.Worker || !window.WebAssembly) {
@@ -113,7 +110,7 @@ if (!window.fetch || !window.Worker || !window.WebAssembly) {
 ### CSP
 
 If your app has a [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy),
-wasm-worker require `worker-src data:` and `script-src data:` in your config.
+wasc-worker require `worker-src data:` and `script-src data:` in your config.
 
 ## Inspiration
 
@@ -130,6 +127,8 @@ Every release, along with the migration instructions, is documented on the Githu
 - [@teo_basso](https://twitter.com/teo_basso)
 
 ## Copyright and License
+Original Author:
+
 Copyright (c) 2018, Matteo Basso.
 
 wasm-worker source code is licensed under the [MIT License](https://github.com/mbasso/wasm-worker/blob/master/LICENSE.md).
