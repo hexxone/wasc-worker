@@ -1,6 +1,8 @@
 import ACTIONS from './actions';
-import workerOnMessage from './worker';
 import { getWasmSource } from './utils';
+
+//import workerOnMessage from './wascWorker';
+import ascWorker from 'worker-loader!./wascWorker';
 
 const getTransferableParams = (params = []) =>
   params.filter(x => (
@@ -9,18 +11,10 @@ const getTransferableParams = (params = []) =>
     (x instanceof ImageBitmap)
   ));
 
-export default function wascWorker(source, options: any = {}) {
+export default function wascWorker(source, options: any = {}): Promise<any> {
   let currentId = 0;
   const promises = {};
-  const { getImportObject, ...otherOptions } = options;
-
-  console.info(`"${getImportObject}"`);
-
-  const worker = new Worker(
-    `data:,ACTIONS=${JSON.stringify(ACTIONS)};getImportObject=${getImportObject};` +
-    `importObject=undefined;wasmModule=null;moduleInstance=null;onmessage=${workerOnMessage}`,
-    otherOptions,
-  );
+  const worker = new ascWorker(options);
 
   worker.onmessage = (e) => {
     const { id, result, action, payload } = e.data;
