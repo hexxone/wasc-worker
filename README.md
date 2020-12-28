@@ -23,10 +23,10 @@ If you aren't using npm in your project, you can include wasmWorker using UMD bu
 Once you have installed wasc-worker, supposing a CommonJS environment, you can import and use it in this way:
 
 ```js
-import wascWorker from 'wasc-worker';
+import wascModule from 'wasc-worker';
 
 // supposing an "add.wasm" module that exports a single function "add"
-wascWorker('add.wasm')
+wascModule('add.wasm')
   .then(module => {
     return module.exports.add(1, 2);
   })
@@ -40,7 +40,7 @@ wascWorker('add.wasm')
 
 // you can also run js functions inside the worker
 // to access importObject for example
-wascWorker('add.wasm')
+wascModule('add.wasm')
   .then(module => {
     return module.run(({
       // module,

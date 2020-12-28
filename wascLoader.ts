@@ -3,12 +3,26 @@
 import loader, { ASUtil, ResultObject } from "@assemblyscript/loader";
 import MakeRT from "./wascRT";
 
+function myFetch(path: string) {
+    return new Promise(res => {
+        const request = new XMLHttpRequest();
+        request.open('GET', path);
+        request.responseType = 'arraybuffer';
+        request.send();
+
+        request.onload = function () {
+            var bytes = request.response;
+            res(bytes);
+        };
+    });
+}
+
 export default function Load(path: string, options: any = {}):
     Promise<ResultObject & { exports: ASUtil }> {
 
     // @TODO customizable
     var rtExports: any;
-    const memory = new WebAssembly.Memory({ initial: 32768 });
+    const memory = new WebAssembly.Memory({ initial: 32000 });
     const staticImports = {
         env: {
             memory,
@@ -35,7 +49,7 @@ export default function Load(path: string, options: any = {}):
         if (getImportObject !== undefined)
             Object.assign(myImports, getImportObject());
 
-        loader.instantiateStreaming(fetch(path), myImports).then(
+        loader.instantiate(myFetch(path), myImports).then(
             ({ module, instance, exports }) => {
                 // get Exports
                 rtExports = MakeRT(
@@ -45,15 +59,17 @@ export default function Load(path: string, options: any = {}):
                 );
 
                 // Add Helpers
-                Object.assign(exports, {  ...rtExports  });
+                Object.assign(exports, { ...rtExports });
                 function run(func, ...params) {
-                    const fun = new Function(`return ${func}`)();
-                    return fun({
-                        module,
-                        instance,
-                        importObject: exports,
-                        params,
-                    });
+                    return new Promise(res => {
+                        const fun = new Function(`return ${func}`)();
+                        res(fun({
+                            module,
+                            instance,
+                            importObject: exports,
+                            params,
+                        }));
+                    })
                 }
 
                 // we done here
