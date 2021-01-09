@@ -20,8 +20,8 @@ function myFetch(path: string) {
 export default function Load(path: string, options: any = {}):
     Promise<ResultObject & { exports: ASUtil }> {
 
-    // @TODO customizable
-    var rtExports: any;
+    var ascExports: any;
+
     const memory = new WebAssembly.Memory({ initial: 32000 });
     const staticImports = {
         env: {
@@ -33,10 +33,10 @@ export default function Load(path: string, options: any = {}):
                 console.log('U32: ' + value);
             },
             logU32Array(ptr) {
-                console.log(rtExports.getU32Array(ptr));
+                console.log(ascExports.getU32Array(ptr));
             },
             logF64Array(ptr) {
-                console.log(rtExports.getF64Array(ptr));
+                console.log(ascExports.getF64Array(ptr));
             }
         }
     };
@@ -52,7 +52,7 @@ export default function Load(path: string, options: any = {}):
         loader.instantiate(myFetch(path), myImports).then(
             ({ module, instance, exports }) => {
                 // get Exports
-                rtExports = MakeRT(
+                var rtExports = MakeRT(
                     memory,
                     exports.allocF64Array,
                     exports.allocU32Array
@@ -60,6 +60,8 @@ export default function Load(path: string, options: any = {}):
 
                 // Add Helpers
                 Object.assign(exports, { ...rtExports });
+                ascExports = exports;
+                
                 function run(func, ...params) {
                     return new Promise(res => {
                         const fun = new Function(`return ${func}`)();

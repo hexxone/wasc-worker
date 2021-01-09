@@ -43,7 +43,11 @@ const wascw: Worker = self as any;
 // @TODO customizable
 const memory = new WebAssembly.Memory({ initial: 32000 });
 
-var rtExports: any;
+var ascImports: {};
+var ascInstance: WebAssembly.Instance;
+var ascModule: WebAssembly.Module;
+var ascExports: any;
+
 const staticImports = {
   env: {
     memory,
@@ -54,20 +58,13 @@ const staticImports = {
       console.log('U32: ' + value);
     },
     logU32Array(ptr) {
-      console.log(rtExports.getU32Array(ptr));
+      console.log(ascExports.getU32Array(ptr));
     },
     logF64Array(ptr) {
-      console.log(rtExports.getF64Array(ptr));
+      console.log(ascExports.getF64Array(ptr));
     }
   }
 };
-
-var ascImports: {};
-var ascInstance: WebAssembly.Instance;
-var ascModule: WebAssembly.Module;
-var ascExports: any;
-
-var allExports: string[];
 
 wascw.addEventListener("message", (e) => {
   const { id, action, payload, getImportObject } = e.data;
@@ -98,22 +95,23 @@ wascw.addEventListener("message", (e) => {
       })
       .then(({ module, instance, exports }) => {
         // get Runtime Exports
-        rtExports = MakeRT(
+        var rtExports = MakeRT(
           memory,
           exports.allocF64Array,
           exports.allocU32Array
         );
+
+        // Add Helpers
+        Object.assign(exports, { ...rtExports });
+
         // remembr module
         ascModule = module;
         ascInstance = instance;
         ascExports = exports;
 
-        // resolve available methods as strings
-        allExports = Object.keys(exports);
-        allExports.push(...Object.keys(rtExports));
-        // return to main ctx
+        // return available methods as strings to main ctx
         onSuccess({
-          exports: allExports
+          exports: Object.keys(ascExports)
         });
       })
       .catch(onError);
@@ -122,12 +120,8 @@ wascw.addEventListener("message", (e) => {
     const { func, params } = payload;
     Promise.resolve()
       .then(() => {
-        // get saved instance
-        var ctx = ascExports as any;
-        // include local helpers
-        Object.assign(ctx, { ...rtExports });
         // run the function with parameters
-        onSuccess(ctx[func].apply(ctx, params));
+        onSuccess(ascExports[func].apply(ascExports, params));
       })
       .catch(onError);
 
@@ -139,7 +133,7 @@ wascw.addEventListener("message", (e) => {
         onSuccess(fun({
           module: ascModule,
           instance: ascInstance,
-          importObject: allExports,
+          importObject: ascExports,
           params,
         }));
       })

@@ -1,7 +1,7 @@
 
 import { ResultObject, ASUtil } from '@assemblyscript/loader';
 
-import wascWorker from 'worker-loader!./wascWorker';
+import wascWorker from 'worker-loader!./WascWorker';
 
 import { getWasmSource } from './utils';
 import ACTIONS from './actions';
