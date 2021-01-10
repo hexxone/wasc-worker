@@ -1,0 +1,5 @@
+*.wat
+*.wasm
+*.map
+/build/*
+/node_modules/*
