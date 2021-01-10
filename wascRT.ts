@@ -12,10 +12,10 @@
  */
 
 export default function MakeRT(memory: WebAssembly.Memory, allocF64, allocU32) {
-    
+
     var mem, F64, U32;
     var cached = new WeakMap();
-    
+
     function refreshMemory() {
         if (mem !== memory.buffer) {
             mem = memory.buffer;
@@ -23,7 +23,7 @@ export default function MakeRT(memory: WebAssembly.Memory, allocF64, allocU32) {
             F64 = new Float64Array(mem);
         }
     }
-    
+
     function newF64Array(typedArray) {
         var ptr;
         if (!cached.has(typedArray)) {
@@ -38,17 +38,17 @@ export default function MakeRT(memory: WebAssembly.Memory, allocF64, allocU32) {
         F64.set(typedArray, dataStart >>> 1);
         return ptr;
     }
-    
+
     function getF64Array(ptr) {
         refreshMemory();
         ptr >>>= 2;
-    
+
         const offset = (U32[ptr] >>> 2) + 2;
         const len = U32[ptr + 1];
-    
+
         return F64.subarray(offset, offset + len);
     }
-    
+
     function newU32Array(typedArray) {
         var ptr;
         if (!cached.has(typedArray)) {
@@ -63,17 +63,17 @@ export default function MakeRT(memory: WebAssembly.Memory, allocF64, allocU32) {
         U32.set(typedArray, dataStart);
         return ptr;
     }
-    
+
     function getU32Array(ptr) {
         refreshMemory();
         ptr >>>= 2;
-    
+
         const offset = (U32[ptr] >>> 2) + 2;
         const len = U32[ptr + 1];
-    
+
         return U32.subarray(offset, offset + len);
     }
-    
+
 
     return {
         newF64Array,

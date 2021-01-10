@@ -98,7 +98,7 @@ function CleanUp() {
                 return new Promise(res => {
                     fs.unlink(path.join(outPath, file), err => {
                         if (err) throw err;
-                        console.info("[" + pluginName + "] delete: "+ file);
+                        console.info("[" + pluginName + "] delete: " + file);
                         res();
                     });
                 })
@@ -155,7 +155,7 @@ class WascBuilderPlugin {
                 }
 
                 // finalize
-                if(this.options.cleanup) await CleanUp();
+                if (this.options.cleanup) await CleanUp();
 
                 console.info("[" + pluginName + "] finished.");
             })

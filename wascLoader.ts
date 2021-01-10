@@ -61,7 +61,7 @@ export default function Load(path: string, options: any = {}):
                 // Add Helpers
                 Object.assign(exports, { ...rtExports });
                 ascExports = exports;
-                
+
                 function run(func, ...params) {
                     return new Promise(res => {
                         const fun = new Function(`return ${func}`)();
