@@ -134,25 +134,24 @@ class WascBuilderPlugin {
                 const rPath = path.resolve(__dirname, this.options.relpath);
                 var sFiles = getAllFiles(rPath, "");
 
-                for (var staticFile in sFiles) {
-
-                    const sFile = sFiles[staticFile];
+                // Parallel compiling
+                Promise.all(sFiles.map(sFile => {
                     const sName = sFile.replace(/^.*[\\\/]/, '');
-
                     // if regex match wasm name, compile
                     if (sName.match(this.options.regexx)) {
                         console.info(`[${pluginName}] Compile ${this.options.production ? "prod" : "debug"} wasm: ${sName}`);
                         // keep ".wasm" and remove ".ts" part of name
                         const newName = sName.replace(/\.[^/.]+$/, "");
 
-                        await compileWasm(rPath + sFile, newName, this.options.production).then(({ normal, map }) => {
-                            console.info("[" + pluginName + "] Success: " + newName);
-                            // emit files into compilation
-                            if (normal) compilation.emitAsset(newName, new RawSource(normal));
-                            if (map) compilation.emitAsset(newName + ".map", new RawSource(map));
-                        });
+                        return compileWasm(rPath + sFile, newName, this.options.production)
+                            .then(({ normal, map }) => {
+                                console.info("[" + pluginName + "] Success: " + newName);
+                                // emit files into compilation
+                                if (normal) compilation.emitAsset(newName, new RawSource(normal));
+                                if (map) compilation.emitAsset(newName + ".map", new RawSource(map));
+                            });
                     }
-                }
+                }));
 
                 // finalize
                 if (this.options.cleanup) await CleanUp();
