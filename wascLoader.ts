@@ -1,7 +1,7 @@
 // DONT USE WORKER?
 
 import loader, { ASUtil, ResultObject } from "@assemblyscript/loader";
-import MakeRT from "./wascRT";
+import MakeRT from "./WascRT";
 
 function myFetch(path: string) {
     return new Promise(res => {

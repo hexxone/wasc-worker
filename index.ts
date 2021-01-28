@@ -1,11 +1,11 @@
 
 import { ResultObject, ASUtil } from '@assemblyscript/loader';
 
-import wascWorker from 'worker-loader!./WascWorker';
+import WascWorker from 'worker-loader!./WascWorker';
 
-import { getWasmSource } from './utils';
-import ACTIONS from './actions';
-import Load from './wascLoader';
+import { getWasmSource } from './Utils';
+import ACTIONS from './Actions';
+import Load from './WascLoader';
 
 const getTransferableParams = (params = []) =>
   params.filter(x => (
@@ -22,7 +22,7 @@ export default function wascModule(source, options: any = {}, useWorker: boolean
 
     let currentId = 0;
     const promises = {};
-    const worker = new wascWorker(options);
+    const worker = new WascWorker(options);
 
     worker.onmessage = (e) => {
       const { id, result, action, payload } = e.data;
@@ -33,6 +33,8 @@ export default function wascModule(source, options: any = {}, useWorker: boolean
           const { exports } = payload;
 
           promises[id][0]({
+
+            // wrap the returned context/thread exports into promises
             exports: exports.reduce((acc, exp) => ({
               ...acc,
               [exp]: (...params) => new Promise((...rest) => {
@@ -48,6 +50,8 @@ export default function wascModule(source, options: any = {}, useWorker: boolean
                 }, getTransferableParams(params));
               }),
             }), {}),
+
+            // export context/thread run function
             run: (func, ...params) => new Promise((...rest) => {
 
               promises[++currentId] = rest;

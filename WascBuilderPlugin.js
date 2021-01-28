@@ -18,6 +18,7 @@ const path = require('path');
 const asc = require("assemblyscript/bin/asc");
 const validate = require('schema-utils');
 const { RawSource } = require('webpack-sources');
+const { Compilation } = require("webpack");
 
 const pluginName = 'WasmPlugin';
 const outPath = path.resolve(__dirname, 'build');
@@ -32,80 +33,14 @@ const schema = {
         relpath: {
             type: 'string'
         },
-        regexx: {
-            type: 'object'
+        extension: {
+            type: 'string'
         },
         cleanup: {
             type: 'boolean'
         }
     }
 };
-
-// list files recursively
-function getAllFiles(baseDir, subDir, arrayOfFiles) {
-    var sub = baseDir + "/" + subDir;
-    var files = fs.readdirSync(sub);
-    var arrayOfFiles = arrayOfFiles || [];
-    files.forEach((file) => {
-        var fle = subDir + "/" + file;
-        if (fs.statSync(sub + "/" + file).isDirectory())
-            arrayOfFiles = getAllFiles(baseDir, fle, arrayOfFiles);
-        else
-            arrayOfFiles.push(fle);
-    });
-    return arrayOfFiles;
-}
-
-// compile assemblyscript (typescript) module to wasm and return binary
-function compileWasm(inputPath, newName, production) {
-    return new Promise(resolve => {
-        try {
-            const newOut = path.resolve(outPath, newName);
-
-            asc.main([
-                inputPath,
-                "--extension", "asc",
-                "--binaryFile", newOut,
-                "--measure",
-                "--runtime", "full",
-                production ? "--optimize" : "--sourceMap"
-            ], (err) => {
-                //let output = execSync('npm run asbuild', { cwd: __dirname });
-                if (err) throw err;
-                // none? -> read and resolve optimized.wasm string
-                resolve(production ? {
-                    normal: fs.readFileSync(newOut)
-                } : {
-                        normal: fs.readFileSync(newOut),
-                        map: fs.readFileSync(newOut + ".map")
-                    });
-            });
-        }
-        catch (ex) {
-            console.warn("[" + pluginName + "] Compile Error!");
-            console.error(ex);
-        }
-    });
-}
-
-// delete all files in the output dir
-function CleanUp() {
-    console.info("[" + pluginName + "] Cleaning...");
-    return new Promise(resolve => {
-        fs.readdir(outPath, (err, files) => {
-            if (err) throw err;
-            Promise.all(files.map(file => {
-                return new Promise(res => {
-                    fs.unlink(path.join(outPath, file), err => {
-                        if (err) throw err;
-                        console.info("[" + pluginName + "] delete: " + file);
-                        res();
-                    });
-                })
-            })).then(resolve);
-        });
-    });
-}
 
 // actual webpack plugin
 class WascBuilderPlugin {
@@ -124,42 +59,122 @@ class WascBuilderPlugin {
         compiler.hooks.thisCompilation.tap(pluginName,
             (compilation) => compilation.hooks.processAssets.tap({
                 name: pluginName,
-                stage: -2000,
-            }, async () => {
+                stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+            }, async (assets) => {
+                
                 if (addedOnce) return;
                 addedOnce = true;
                 console.log("[" + pluginName + "] Gathering Infos....");
 
                 // add static files from folder
                 const rPath = path.resolve(__dirname, this.options.relpath);
-                var sFiles = getAllFiles(rPath, "");
+                var sFiles = this.getAllFiles(rPath, "");
 
                 // Parallel compiling
-                Promise.all(sFiles.map(sFile => {
-                    const sName = sFile.replace(/^.*[\\\/]/, '');
-                    // if regex match wasm name, compile
-                    if (sName.match(this.options.regexx)) {
-                        console.info(`[${pluginName}] Compile ${this.options.production ? "prod" : "debug"} wasm: ${sName}`);
-                        // keep ".wasm" and remove ".ts" part of name
-                        const newName = sName.replace(/\.[^/.]+$/, "");
+                await Promise.all(sFiles.map(sFile => {
+                    // finally return Promise of module compilation
+                    return new Promise(resolve => {
 
-                        return compileWasm(rPath + sFile, newName, this.options.production)
-                            .then(({ normal, map }) => {
-                                console.info("[" + pluginName + "] Success: " + newName);
+                        // only compile if wasm name match regex
+                        const sName = sFile.replace(/^.*[\\\/]/, '');
+                        if (!sName.endsWith("." + this.options.extension)) {
+                            resolve(false);
+                            return;
+                        }
+
+                        console.info(`[${pluginName}] Compile ${this.options.production ? "production" : "debug"}: ${sName}`);
+
+                        // change new file ext to ".wasm"
+                        var newName = sName.replace(/\.[^/.]+$/, "");
+                        if (!newName.endsWith(".wasm")) newName += ".wasm";
+
+                        this.compileWasm(rPath + sFile, newName, this.options.production)
+                            .then(async ({ normal, map }) => {
                                 // emit files into compilation
-                                if (normal) compilation.emitAsset(newName, new RawSource(normal));
-                                if (map) compilation.emitAsset(newName + ".map", new RawSource(map));
-                            });
-                    }
+                                if (normal) await compilation.emitAsset(newName, new RawSource(normal));
+                                if (map) await compilation.emitAsset(newName + ".map", new RawSource(map));
+
+                                console.info("[" + pluginName + "] Success: " + newName);
+                                resolve(true);
+                            })
+                        });
                 }));
 
                 // finalize
-                if (this.options.cleanup) await CleanUp();
+                if (this.options.cleanup) await this.CleanUp();
 
                 console.info("[" + pluginName + "] finished.");
             })
         );
     }
+
+
+    // list files recursively
+    getAllFiles(baseDir, subDir, arrayOfFiles) {
+        var sub = baseDir + "/" + subDir;
+        var files = fs.readdirSync(sub);
+        var arrayOfFiles = arrayOfFiles || [];
+        files.forEach((file) => {
+            var fle = subDir + "/" + file;
+            if (fs.statSync(sub + "/" + file).isDirectory())
+                arrayOfFiles = this.getAllFiles(baseDir, fle, arrayOfFiles);
+            else
+                arrayOfFiles.push(fle);
+        });
+        return arrayOfFiles;
+    }
+
+    // compile assemblyscript (typescript) module to wasm and return binary
+    compileWasm(inputPath, newName, production) {
+        return new Promise(resolve => {
+            try {
+                const newOut = path.resolve(outPath, newName);
+
+                asc.main([
+                    inputPath,
+                    "--extension", this.options.extension,
+                    "--binaryFile", newOut,
+                    "--measure",
+                    "--runtime", "full",
+                    production ? "--optimize" : "--sourceMap"
+                ], (err) => {
+                    //let output = execSync('npm run asbuild', { cwd: __dirname });
+                    if (err) throw err;
+                    // none? -> read and resolve optimized.wasm string
+                    resolve(production ? {
+                        normal: fs.readFileSync(newOut)
+                    } : {
+                            normal: fs.readFileSync(newOut),
+                            map: fs.readFileSync(newOut + ".map")
+                        });
+                });
+            }
+            catch (ex) {
+                console.warn("[" + pluginName + "] Compile Error!");
+                console.error(ex);
+            }
+        });
+    }
+
+    // delete all files in the output dir
+    CleanUp() {
+        console.info("[" + pluginName + "] Cleaning...");
+        return new Promise(resolve => {
+            fs.readdir(outPath, (err, files) => {
+                if (err) throw err;
+                Promise.all(files.map(file => {
+                    return new Promise(res => {
+                        fs.unlink(path.join(outPath, file), err => {
+                            if (err) throw err;
+                            console.info("[" + pluginName + "] delete: " + file);
+                            res();
+                        });
+                    })
+                })).then(resolve);
+            });
+        });
+    }
+
 }
 
 module.exports = WascBuilderPlugin;
