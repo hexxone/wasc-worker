@@ -14,8 +14,8 @@
 "use strict";
 
 import loader from "@assemblyscript/loader";
-import ACTIONS from "./actions";
-import MakeRT from "./wascRT";
+import ACTIONS from "./Actions";
+import MakeRT from "./WascRT";
 
 const getTransferableParams = (...params) =>
   params.filter(x => (
