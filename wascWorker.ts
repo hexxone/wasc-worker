@@ -17,6 +17,8 @@ import loader from "@assemblyscript/loader";
 import ACTIONS from "./Actions";
 import MakeRT from "./WascRT";
 
+import { myFetch } from "./Utils";
+
 const getTransferableParams = (...params) =>
   params.filter(x => (
     (x instanceof ArrayBuffer) ||
@@ -24,24 +26,10 @@ const getTransferableParams = (...params) =>
     (x instanceof ImageBitmap)
   )) || [];
 
-function myFetch(path: string) {
-  return new Promise(res => {
-    const request = new XMLHttpRequest();
-    request.open('GET', path);
-    request.responseType = 'arraybuffer';
-    request.send();
-
-    request.onload = function () {
-      var bytes = request.response;
-      res(bytes);
-    };
-  });
-}
-
 const wascw: Worker = self as any;
 
 // @TODO customizable
-const memory = new WebAssembly.Memory({ initial: 32000 });
+const memory = new WebAssembly.Memory({ initial: 8192 });
 
 var ascImports: {};
 var ascInstance: WebAssembly.Instance;
@@ -68,8 +56,7 @@ const staticImports = {
 
 wascw.addEventListener("message", (e) => {
   const { id, action, payload, getImportObject } = e.data;
-  console.log(e);
-
+  
   const sendMessage = (result, payload) => {
     wascw.postMessage({
       id,
