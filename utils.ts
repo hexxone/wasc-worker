@@ -12,6 +12,15 @@ export const getWasmSource = (source) => {
         result;
     }
   }
-
   return result;
 };
+
+export function myFetch(path: string): Promise<any> {
+  return new Promise(res => {
+    const request = new XMLHttpRequest();
+    request.open('GET', path);
+    request.responseType = "arraybuffer";
+    request.onload = () => res(request.response);
+    request.send();
+  });
+}

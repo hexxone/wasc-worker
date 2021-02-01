@@ -3,26 +3,15 @@
 import loader, { ASUtil, ResultObject } from "@assemblyscript/loader";
 import MakeRT from "./WascRT";
 
-function myFetch(path: string) {
-    return new Promise(res => {
-        const request = new XMLHttpRequest();
-        request.open('GET', path);
-        request.responseType = 'arraybuffer';
-        request.send();
+import { myFetch } from "./Utils";
 
-        request.onload = function () {
-            var bytes = request.response;
-            res(bytes);
-        };
-    });
-}
 
 export default function Load(path: string, options: any = {}):
     Promise<ResultObject & { exports: ASUtil }> {
 
     var ascExports: any;
 
-    const memory = new WebAssembly.Memory({ initial: 32000 });
+    const memory = new WebAssembly.Memory({ initial: 8192 });
     const staticImports = {
         env: {
             memory,
