@@ -14,22 +14,11 @@
 "use strict";
 
 import loader from "@assemblyscript/loader";
-import ACTIONS from "./Actions";
-import MakeRT from "./WascRT";
-
-import { myFetch } from "./Utils";
-
-const getTransferableParams = (...params) =>
-  params.filter(x => (
-    (x instanceof ArrayBuffer) ||
-    (x instanceof MessagePort) ||
-    (x instanceof ImageBitmap)
-  )) || [];
+// reused in inline loader, hence seperate file.
+import { MakeRuntime, myFetch, ACTIONS, getTransferableParams, INITIAL_MEM } from "./WascRT";
 
 const wascw: Worker = self as any;
-
-// @TODO customizable
-const memory = new WebAssembly.Memory({ initial: 8192 });
+const memory = new WebAssembly.Memory({ initial: INITIAL_MEM });
 
 var ascImports: {};
 var ascInstance: WebAssembly.Instance;
@@ -55,8 +44,9 @@ const staticImports = {
 };
 
 wascw.addEventListener("message", (e) => {
+
   const { id, action, payload, getImportObject } = e.data;
-  
+
   const sendMessage = (result, payload) => {
     wascw.postMessage({
       id,
@@ -71,18 +61,18 @@ wascw.addEventListener("message", (e) => {
 
   if (action === ACTIONS.COMPILE_MODULE) {
     Promise.resolve()
-      .then(() => {
+      .then(async () => {
         // get import object
         ascImports = Object.assign({}, staticImports);
         if (getImportObject !== undefined)
           Object.assign(ascImports, getImportObject());
 
-        // make streaming webassembly
-        return loader.instantiate(myFetch(payload), ascImports);
-      })
-      .then(({ module, instance, exports }) => {
+        // make webassembly
+        const byteModule = await myFetch(payload);
+        const { module, instance, exports } = loader.instantiateSync(byteModule, ascImports);
+
         // get Runtime Exports
-        var rtExports = MakeRT(
+        var rtExports = MakeRuntime(
           memory,
           exports.allocF64Array,
           exports.allocU32Array
@@ -104,7 +94,9 @@ wascw.addEventListener("message", (e) => {
       .catch(onError);
 
   } else if (action === ACTIONS.CALL_FUNCTION_EXPORT) {
+
     const { func, params } = payload;
+
     Promise.resolve()
       .then(() => {
         // run the function with parameters
@@ -113,7 +105,9 @@ wascw.addEventListener("message", (e) => {
       .catch(onError);
 
   } else if (action === ACTIONS.RUN_FUNCTION) {
+
     const { func, params } = payload;
+
     Promise.resolve()
       .then(() => {
         const fun = new Function(`return ${func}`)();
