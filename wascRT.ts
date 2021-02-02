@@ -11,10 +11,13 @@
  * 
  */
 
-export default function MakeRT(memory: WebAssembly.Memory, allocF64, allocU32) {
+// TODO customizable ??
+export const INITIAL_MEM = 4096;
+
+export function MakeRuntime(memory: WebAssembly.Memory, allocF64, allocU32) {
 
     var mem, F64, U32;
-    var cached = new WeakMap();
+    const cached = new WeakMap();
 
     function refreshMemory() {
         if (mem !== memory.buffer) {
@@ -74,11 +77,35 @@ export default function MakeRT(memory: WebAssembly.Memory, allocF64, allocU32) {
         return U32.subarray(offset, offset + len);
     }
 
-
     return {
         newF64Array,
         getF64Array,
         newU32Array,
         getU32Array,
     };
+}
+
+// Small reusable fetch function, should work for local & web server files
+export function myFetch(path: string): Promise<ArrayBuffer> {
+    return new Promise(res => {
+        const request = new XMLHttpRequest();
+        request.open('GET', path);
+        request.responseType = "arraybuffer";
+        request.onload = () => res(request.response);
+        request.send();
+    });
+}
+
+export enum ACTIONS {
+    COMPILE_MODULE = 0,
+    CALL_FUNCTION_EXPORT = 1,
+    RUN_FUNCTION = 2
+}
+
+export function getTransferableParams(...params) {
+    return params.filter(x => (
+        (x instanceof ArrayBuffer) ||
+        (x instanceof MessagePort) ||
+        (x instanceof ImageBitmap)
+    )) || [];
 }
