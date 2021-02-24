@@ -151,7 +151,6 @@ export function LoadWorker(source: string, options: any = {}, useWorker: boolean
         worker.postMessage({
             id: currentId,
             action: ACTIONS.COMPILE_MODULE,
-            // TODO
             payload: source,
         });
     });

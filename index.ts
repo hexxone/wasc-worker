@@ -15,16 +15,29 @@ import { ResultObject, ASUtil } from '@assemblyscript/loader';
 
 import { LoadInline, LoadWorker } from './WascLoader';
 
+const NAMESPACE = 'wasc';
+
 export default function WascInit(source: string, options: any = {}, useWorker: boolean = true, keepModules: boolean = true): Promise<ResultObject & { exports: ASUtil }> {
   return new Promise(async resolve => {
-    // reuse loaded module?
+
+    // reuse loaded module if exist & loaded same way as requested
+    // Note: This assumes, WASC Modules will be reset externally before use
     const noPointName = source.replace(".", "_");
-    if (keepModules && window[noPointName]) resolve(window[noPointName]);
+    const storage = window[NAMESPACE] ? window[NAMESPACE] : window[NAMESPACE] = [];
+    if (keepModules && storage[noPointName] && storage[noPointName].useWorker == useWorker) resolve(storage[noPointName]);
+
     // initialize the actual module
     const promiseMe = (useWorker && Worker) ? LoadWorker : LoadInline;
     const result = await promiseMe(source, options);
+
     // keep the loaded module?
-    if (keepModules) window[noPointName] = result;
+    if (keepModules) {
+      var res = result as any;
+      // remember if we are using worker..
+      res.useWorker = useWorker;
+      storage[noPointName] = result;
+    }
+    
     // return the freshly initialized module
     resolve(result);
   });
