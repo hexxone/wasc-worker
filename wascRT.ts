@@ -86,12 +86,16 @@ export function MakeRuntime(memory: WebAssembly.Memory, allocF64, allocU32) {
 }
 
 // Small reusable fetch function, should work for local & web server files
-export function myFetch(path: string): Promise<ArrayBuffer> {
+export function myFetch(path: string, resType: string = "arraybuffer", owMime?: string): Promise<any> {
     return new Promise(res => {
         const request = new XMLHttpRequest();
         request.open('GET', path);
-        request.responseType = "arraybuffer";
-        request.onload = () => res(request.response);
+        if (owMime) request.overrideMimeType(owMime);
+        request.responseType = resType as any;
+        request.onload = () => {
+            if (request.status != 200) console.error(request);
+            res(request.response);
+        };
         request.send();
     });
 }
