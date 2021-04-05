@@ -160,15 +160,8 @@ wascModule(bufferSource: TypedArray | ArrayBuffer, options?: Options, useWorker?
 
 ## Browser support
 
-`wasc-worker` uses [fetch](https://developer.mozilla.org/it/docs/Web/API/Fetch_API), [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) and [WebAssembly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly) APIs, they are broadly supported by major browser engines but you would like to polyfill them to support old versions.
+`wasc-worker` uses [fetch](https://developer.mozilla.org/it/docs/Web/API/Fetch_API), [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) and [WebAssembly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly) APIs, they are broadly supported by major browser engines but youprobably need to polyfill them to support old versions (e.g. IE).
 
-```js
-if (!window.fetch || !window.Worker || !window.WebAssembly) {
-    ...
-} else {
-    ...
-}
-```
 
 ### Content-Security-Policy
 
