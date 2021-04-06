@@ -109,7 +109,7 @@ wascw.addEventListener('message', (e) => {
 				onSuccess(fun({
 					module: ascModule,
 					instance: ascInstance,
-					importObject: ascExports,
+					exports: ascExports,
 					params,
 				}));
 			})

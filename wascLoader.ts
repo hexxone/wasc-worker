@@ -83,14 +83,14 @@ export function LoadInline(path: string, initialMem: number = INITIAL_MEM, optio
 				res(fun({
 					module,
 					instance,
-					importObject: exports,
+					exports,
 					params,
 				}));
 			});
 		}
 
 		// we done here
-		resolve({module, instance, exports, run} as any);
+		resolve({module, instance, exports, run});
 	});
 }
 

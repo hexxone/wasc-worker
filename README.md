@@ -127,36 +127,8 @@ wascModule('add.wasm')
 
 Here you can see the actual interface(s).
 
-```ts
-type JsCallback = (context: {
-    module: WebAssembly.Module,
-    instance: WebAssembly.Instance,
-    importObject: importObject,
-    params: any,
-  }) => any;
+#### [Documentation](https://hexxone.github.io/we_utils/WascInterface.html)
 
-type WasmWorkerModule = {
-  // these are the merged exports from
-  exports: {
-    [export: string]: (...any: Array<any>) => Promise<any>
-  },
-  // run a js function inside the worker and provides it the given params
-  // ⚠️ Caveat: the function you pass cannot rely on its surrounding scope!
-  // It is executed in an isolated context.
-  // Please use the "params" parameter to provide some values to the callback
-  run: (callback: JsCallback, params?: any) => Promise<any>
-};
-
-type Options = {
-  // @TODO fixing worker options
-};
-
-// browser only
-wascModule(url: string, options?: Options, useWorker?: true): Promise<WasmWorkerModule> 
-
-// universal
-wascModule(bufferSource: TypedArray | ArrayBuffer, options?: Options, useWorker?: true): Promise<WasmWorkerModule>
-```
 
 ## Browser support
 
@@ -184,6 +156,7 @@ Every old release, along with the migration instructions, is documented on the G
 **Matteo Basso**
 - [github/mbasso](https://github.com/mbasso)
 - [@teo_basso](https://twitter.com/teo_basso)
+
 
 ## Copyright and License
 Original Author:
