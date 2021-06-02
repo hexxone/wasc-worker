@@ -66,7 +66,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#WascRun">WascRun</a></li><li><a href="global.html#wascSchema">wascSchema</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascLoader.html">WascLoader</a></li></ul><h3>Interfaces</h3><ul><li><a href="ASUtil.html">ASUtil</a></li><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#staticImports">staticImports</a></li><li><a href="global.html#wascSchema">wascSchema</a></li><li><a href="global.html#wascWorker">wascWorker</a></li></ul></div>
                 
             </nav>
         </div>
@@ -153,6 +153,75 @@
         <div class='vertical-section'>
             <h1>Members</h1>
             <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id="staticImports">
+    <a class="href-link" href="#staticImports">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        staticImports
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Wasc.ts.html" class="button">View Source</a>
+            <span>
+                <a href="Wasc.ts.html">Wasc.ts</a>, <a href="Wasc.ts.html#line25">line 25</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
             
                 <div class="member">
 
@@ -261,7 +330,7 @@
     
     
     <div class="description">
-        Filter out parameters for passing them into WebWorkers
+        Filter out transferrable parameters for passing into WebWorkers
     </div>
     
 
@@ -361,9 +430,9 @@
 
     
         <p class="tag-source">
-            <a href="WascRT.ts.html" class="button">View Source</a>
+            <a href="WascUtil.ts.html" class="button">View Source</a>
             <span>
-                <a href="WascRT.ts.html">WascRT.ts</a>, <a href="WascRT.ts.html#line146">line 146</a>
+                <a href="WascUtil.ts.html">WascUtil.ts</a>, <a href="WascUtil.ts.html#line52">line 52</a>
             </span>
         </p>
     
@@ -584,9 +653,9 @@
 
     
         <p class="tag-source">
-            <a href="WascRT.ts.html" class="button">View Source</a>
+            <a href="WascUtil.ts.html" class="button">View Source</a>
             <span>
-                <a href="WascRT.ts.html">WascRT.ts</a>, <a href="WascRT.ts.html#line116">line 116</a>
+                <a href="WascUtil.ts.html">WascUtil.ts</a>, <a href="WascUtil.ts.html#line20">line 20</a>
             </span>
         </p>
     
@@ -643,12 +712,12 @@
 
 
     
-    <h4 class="name" id="WascRun">
-        <a class="href-link" href="#WascRun">#</a>
+    <h4 class="name" id="wascWorker">
+        <a class="href-link" href="#wascWorker">#</a>
         
         <span class="code-name">
             
-                WascRun<span class="signature">(params)</span><span class="type-signature"></span>
+                wascWorker<span class="signature">(source, initialMem, options, useWorker)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="WascInterface.html">WascInterface</a>>}</span>
             
         </span>
     </h4>
@@ -657,7 +726,7 @@
     
     
     <div class="description">
-        The call-struct for the internal run function
+        Initializes a new WebAssembly instance.
     </div>
     
 
@@ -695,13 +764,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>params</code></td>
+      <td class="name"><code>source</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type"><a href="WascBasic.html">WascBasic</a></span>
+<span class="param-type">string</span>
 
 
   
@@ -711,7 +780,82 @@
 
   
 
-  <td class="description last">the data passed into the run-function</td>
+  <td class="description last">compiled .wasm module path</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>initialMem</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">initial webassembly memory (default 4096)</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">passed to the module init</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>useWorker</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">boolean</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">use worker or inline</td>
 </tr>
 
 
@@ -757,9 +901,9 @@
 
     
         <p class="tag-source">
-            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <a href="index.ts.html" class="button">View Source</a>
             <span>
-                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line19">line 19</a>
+                <a href="index.ts.html">index.ts</a>, <a href="index.ts.html#line25">line 25</a>
             </span>
         </p>
     
@@ -781,6 +925,31 @@
 
 
 
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>the initialized context</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;<a href="WascInterface.html">WascInterface</a>></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 

@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> WascRT.ts</title>
+  <title> WascUtil.ts</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -68,7 +68,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#WascRun">WascRun</a></li><li><a href="global.html#wascSchema">wascSchema</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascLoader.html">WascLoader</a></li></ul><h3>Interfaces</h3><ul><li><a href="ASUtil.html">ASUtil</a></li><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#staticImports">staticImports</a></li><li><a href="global.html#wascSchema">wascSchema</a></li><li><a href="global.html#wascWorker">wascWorker</a></li></ul></div>
                 
             </nav>
         </div>
@@ -76,7 +76,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>WascRT.ts</h1>
+                    <h1>WascUtil.ts</h1>
                 </header>
                 
 
@@ -85,7 +85,8 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
+            <pre class="prettyprint source linenums"><code>
+/**
 *
 * @author hexxone / https://hexx.one
 *
@@ -96,113 +97,9 @@
 * @ignore
 */
 
-// TODO customize this according to needs
-export const INITIAL_MEM = 4096;
-
-/**
-* @ignore
-* Creates the required internal runtime functions
-* @param {WebAssembly.Memory} memory initial WebAssembly memory
-* @param {Function} allocF64
-* @param {Function} allocU32
-* @return {Object} Runtime
-*/
-export function makeRuntime(memory: WebAssembly.Memory, allocF64, allocU32) {
-	let mem; let F64; let U32;
-	const cached = new WeakMap();
-
-	/**
-	* Refreshes the local memory-representation.
-	* This is usually required, after new memory was allocated in WebAssembly
-	*/
-	function refreshMemory() {
-		if (mem !== memory.buffer) {
-			mem = memory.buffer;
-			U32 = new Uint32Array(mem);
-			F64 = new Float64Array(mem);
-		}
-	}
-
-	/**
-	* Allocates a new Float64Array with given data in WebAssembly
-	* @param {Array} typedArray Data to pass in
-	* @return {Object} allocated array pointer
-	*/
-	function newF64Array(typedArray) {
-		let ptr;
-		if (!cached.has(typedArray)) {
-			ptr = allocF64(typedArray.length);
-			refreshMemory();
-			cached.set(typedArray, ptr);
-		} else {
-			refreshMemory();
-			ptr = cached.get(typedArray);
-		}
-		const dataStart = (U32[ptr >>> 2] >>> 2) + 2;
-		F64.set(typedArray, dataStart >>> 1);
-		return ptr;
-	}
-
-	/**
-	* Copies and returns the float64array at given pointer
-	* @param {Object} ptr allocated array pointer
-	* @return {Float64Array} data
-	*/
-	function getF64Array(ptr) {
-		refreshMemory();
-		ptr >>>= 2;
-
-		const offset = (U32[ptr] >>> 2) + 2;
-		const len = U32[ptr + 1];
-
-		return F64.subarray(offset, offset + len);
-	}
-
-	/**
-	* Create a new Uint32Array in WebAssembly
-	* @param {Array} typedArray Data to pass in
-	* @return {Object} allocated array pointer
-	*/
-	function newU32Array(typedArray) {
-		let ptr;
-		if (!cached.has(typedArray)) {
-			ptr = allocU32(typedArray.length);
-			refreshMemory();
-			cached.set(typedArray, ptr);
-		} else {
-			refreshMemory();
-			ptr = cached.get(typedArray);
-		}
-		const dataStart = (U32[ptr >>> 2] >>> 2) + 2;
-		U32.set(typedArray, dataStart);
-		return ptr;
-	}
-
-	/**
-	* Copies and returns the uint32array at given pointer
-	* @param {Object} ptr allocated array pointer
-	* @return {Uint32Array} data
-	*/
-	function getU32Array(ptr) {
-		refreshMemory();
-		ptr >>>= 2;
-
-		const offset = (U32[ptr] >>> 2) + 2;
-		const len = U32[ptr + 1];
-
-		return U32.subarray(offset, offset + len);
-	}
-
-	return {
-		newF64Array,
-		getF64Array,
-		newU32Array,
-		getU32Array,
-	};
-}
-
 /**
 * Small reusable fetch function, should work for local &amp; web server files
+* @public
 * @param {string} path file to request
 * @param {string} resType type of data to request (default = arraybuffer)
 * @param {string} owMime force-override mime-type (optional)
@@ -224,6 +121,7 @@ export function myFetch(path: string, resType: string = 'arraybuffer', owMime?: 
 
 /**
 * Worker &lt;-> Maincontext communication
+* @public
 */
 /* eslint-disable no-unused-vars */
 export enum ACTIONS {
@@ -233,7 +131,8 @@ export enum ACTIONS {
 }
 
 /**
-* Filter out parameters for passing them into WebWorkers
+* Filter out transferrable parameters for passing into WebWorkers
+* @public
 * @param {Object} params The given Items to filter
 * @return {Object} WebWorker-passable items
 */

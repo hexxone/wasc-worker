@@ -1,8 +1,6 @@
 {
   "scripts": {},
-  "dependencies": {
-    "@assemblyscript/loader": "^0.17.7"
-  },
+  "dependencies": {},
   "devDependencies": {
     "assemblyscript": "^0.17.7"
   }

@@ -1,0 +1,2943 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> ASUtil</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascLoader.html">WascLoader</a></li></ul><h3>Interfaces</h3><ul><li><a href="ASUtil.html">ASUtil</a></li><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#staticImports">staticImports</a></li><li><a href="global.html#wascSchema">wascSchema</a></li><li><a href="global.html#wascWorker">wascWorker</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Interface</p>
+                    <h1>ASUtil</h1>
+                </header>
+                
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>ASUtil</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>hexxone / https://hexx.one</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+    <dt class="tag-license">License:</dt>
+    <dd class="tag-license"><ul class="dummy"><li>Copyright (c) 2021 hexxone All rights reserved.Licensed under the GNU GENERAL PUBLIC LICENSE.See LICENSE file in the project root for full license information.</li></ul></dd>
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line4">line 4</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Members</h1>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">void</span>
+
+
+    </span>
+
+<h4 class="name" id="___collect">
+    <a class="href-link" href="#___collect">#</a>
+    
+    <span class="code-name">
+        ___collect
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Forces a cycle collection. Only relevant if objects potentially forming reference cycles are used.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line154">line 154</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getArray">
+    <a class="href-link" href="#___getArray">#</a>
+    
+    <span class="code-name">
+        ___getArray
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an array's values from the module's memory. Infers the array type from RTTI.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line25">line 25</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">ArrayBuffer</span>
+
+
+    </span>
+
+<h4 class="name" id="___getArrayBuffer">
+    <a class="href-link" href="#___getArrayBuffer">#</a>
+    
+    <span class="code-name">
+        ___getArrayBuffer
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an ArrayBuffer's value from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line21">line 21</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint32Array</span>
+|
+
+<span class="param-type">Float32Array</span>
+|
+
+<span class="param-type">Float64Array</span>
+|
+
+<span class="param-type">Uint8Array</span>
+|
+
+<span class="param-type">Int8Array</span>
+|
+
+<span class="param-type">Uint16Array</span>
+|
+
+<span class="param-type">Int16Array</span>
+|
+
+<span class="param-type">Int32Array</span>
+|
+
+<span class="param-type">BigUint64Array</span>
+|
+
+<span class="param-type">BigInt64Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getArrayView">
+    <a class="href-link" href="#___getArrayView">#</a>
+    
+    <span class="code-name">
+        ___getArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an array's values in the module's memory. Infers the array type from RTTI.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line75">line 75</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Float32Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getFloat32Array">
+    <a class="href-link" href="#___getFloat32Array">#</a>
+    
+    <span class="code-name">
+        ___getFloat32Array
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies a Float32Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line67">line 67</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Float32Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getFloat32ArrayView">
+    <a class="href-link" href="#___getFloat32ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getFloat32ArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on a Float32Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line117">line 117</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Float64Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getFloat64Array">
+    <a class="href-link" href="#___getFloat64Array">#</a>
+    
+    <span class="code-name">
+        ___getFloat64Array
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies a Float64Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line71">line 71</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Float64Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getFloat64ArrayView">
+    <a class="href-link" href="#___getFloat64ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getFloat64ArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on a Float64Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line121">line 121</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Int8Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getInt8Array">
+    <a class="href-link" href="#___getInt8Array">#</a>
+    
+    <span class="code-name">
+        ___getInt8Array
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Int8Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line29">line 29</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Int8Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getInt8ArrayView">
+    <a class="href-link" href="#___getInt8ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getInt8ArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Int8Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line79">line 79</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Int16Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getInt16Array">
+    <a class="href-link" href="#___getInt16Array">#</a>
+    
+    <span class="code-name">
+        ___getInt16Array
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Int16Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line41">line 41</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Int16Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getInt16ArrayView">
+    <a class="href-link" href="#___getInt16ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getInt16ArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Int16Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line91">line 91</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Int32Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getInt32Array">
+    <a class="href-link" href="#___getInt32Array">#</a>
+    
+    <span class="code-name">
+        ___getInt32Array
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Int32Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line49">line 49</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Int32Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getInt32ArrayView">
+    <a class="href-link" href="#___getInt32ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getInt32ArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Int32Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line99">line 99</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">BigInt64Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getInt64Array">
+    <a class="href-link" href="#___getInt64Array">#</a>
+    
+    <span class="code-name">
+        ___getInt64Array
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Int32Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line57">line 57</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">BigInt64Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getInt64ArrayView">
+    <a class="href-link" href="#___getInt64ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getInt64ArrayView
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Int32Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line107">line 107</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">string</span>
+
+
+    </span>
+
+<h4 class="name" id="___getString">
+    <a class="href-link" href="#___getString">#</a>
+    
+    <span class="code-name">
+        ___getString
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies a string's value from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line17">line 17</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint8Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint8Array">
+    <a class="href-link" href="#___getUint8Array">#</a>
+    
+    <span class="code-name">
+        ___getUint8Array
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Uint8Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line33">line 33</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint8Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint8ArrayView">
+    <a class="href-link" href="#___getUint8ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getUint8ArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Uint8Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line83">line 83</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint8ClampedArray</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint8ClampedArray">
+    <a class="href-link" href="#___getUint8ClampedArray">#</a>
+    
+    <span class="code-name">
+        ___getUint8ClampedArray
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Uint8ClampedArray's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line37">line 37</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint8ClampedArray</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint8ClampedArrayView">
+    <a class="href-link" href="#___getUint8ClampedArrayView">#</a>
+    
+    <span class="code-name">
+        ___getUint8ClampedArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Uint8ClampedArray's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line87">line 87</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint16Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint16Array">
+    <a class="href-link" href="#___getUint16Array">#</a>
+    
+    <span class="code-name">
+        ___getUint16Array
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Uint16Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line45">line 45</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint16Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint16ArrayView">
+    <a class="href-link" href="#___getUint16ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getUint16ArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Uint16Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line95">line 95</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint32Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint32Array">
+    <a class="href-link" href="#___getUint32Array">#</a>
+    
+    <span class="code-name">
+        ___getUint32Array
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Uint32Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line53">line 53</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Uint32Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint32ArrayView">
+    <a class="href-link" href="#___getUint32ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getUint32ArrayView
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Uint32Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line103">line 103</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">BigUint64Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint64Array">
+    <a class="href-link" href="#___getUint64Array">#</a>
+    
+    <span class="code-name">
+        ___getUint64Array
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Copies an Uint32Array's values from the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line62">line 62</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">BigUint64Array</span>
+
+
+    </span>
+
+<h4 class="name" id="___getUint64ArrayView">
+    <a class="href-link" href="#___getUint64ArrayView">#</a>
+    
+    <span class="code-name">
+        ___getUint64ArrayView
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Gets a live view on an Uint32Array's values in the module's memory.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line112">line 112</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="___instanceof">
+    <a class="href-link" href="#___instanceof">#</a>
+    
+    <span class="code-name">
+        ___instanceof
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Tests whether a managed object is an instance of the class represented by the specified base id.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line150">line 150</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id="___new">
+    <a class="href-link" href="#___new">#</a>
+    
+    <span class="code-name">
+        ___new
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Allocates an instance of the class represented by the specified id.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line125">line 125</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id="___newArray">
+    <a class="href-link" href="#___newArray">#</a>
+    
+    <span class="code-name">
+        ___newArray
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Allocates a new array in the module's memory and returns a reference (pointer) to it.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line133">line 133</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id="___newString">
+    <a class="href-link" href="#___newString">#</a>
+    
+    <span class="code-name">
+        ___newString
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Allocates a new string in the module's memory and returns a reference (pointer) to it.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line129">line 129</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">void</span>
+
+
+    </span>
+
+<h4 class="name" id="___release">
+    <a class="href-link" href="#___release">#</a>
+    
+    <span class="code-name">
+        ___release
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Releases a previously retained reference to a managed object, allowing the runtime to collect it once its reference count reaches zero.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line141">line 141</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">void</span>
+
+
+    </span>
+
+<h4 class="name" id="___reset">
+    <a class="href-link" href="#___reset">#</a>
+    
+    <span class="code-name">
+        ___reset
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Forcefully resets the heap to its initial offset, effectively clearing dynamic memory. Stub runtime only.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line145">line 145</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id="___retain">
+    <a class="href-link" href="#___retain">#</a>
+    
+    <span class="code-name">
+        ___retain
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Retains a reference to a managed object externally, making sure that it doesn't become collected prematurely. Returns the pointer.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line137">line 137</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">void</span>
+
+
+    </span>
+
+<h4 class="name" id="_start">
+    <a class="href-link" href="#_start">#</a>
+    
+    <span class="code-name">
+        _start
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    Explicit start function, if requested.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="WascInterface.ts.html" class="button">View Source</a>
+            <span>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line13">line 13</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>
