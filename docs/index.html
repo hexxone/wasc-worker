@@ -66,7 +66,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#WascRun">WascRun</a></li><li><a href="global.html#wascSchema">wascSchema</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascLoader.html">WascLoader</a></li></ul><h3>Interfaces</h3><ul><li><a href="ASUtil.html">ASUtil</a></li><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#staticImports">staticImports</a></li><li><a href="global.html#wascSchema">wascSchema</a></li><li><a href="global.html#wascWorker">wascWorker</a></li></ul></div>
                 
             </nav>
         </div>
@@ -100,14 +100,11 @@
 
 
     <section>
-        <article><h1>wasc-worker</h1>
+        <article><h1><a href="https://github.com/hexxone/wasc-worker">wasc-worker</a></h1>
 <p>is a custom fork of:</p>
-<h2>wasm-worker</h2>
-<h3>Please see Authors and Copyright below!</h3>
-<h3>The github Code of Conduct applies to this project. Although this should not be worth mentioning.</h3>
-<blockquote>
-<p>Build AssemblyScript modules and use them in Workers</p>
-</blockquote>
+<h2><a href="https://github.com/mbasso/wasm-worker">wasm-worker</a></h2>
+<h4>Please see Authors and Copyright below!</h4>
+<h2>Build AssemblyScript modules and use them in Workers</h2>
 <p>This repository includes a WebPack Plugin called &quot;WascBuilderPlugin&quot; for compiling AssemblyScript (a Typescript-variant) to WebAssembly modules. =&gt; Usage =&gt; Compiling</p>
 <p>At the same time, it can be used to load and run the module in a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">Web Worker</a>. =&gt; Usage =&gt; Running</p>
 <p>This repo mainly targets browser environments, because it uses the <a href="https://github.com/webpack-contrib/worker-loader">worker_loader</a>. Anything else has not been tested.</p>
@@ -167,10 +164,10 @@ Transform  :          n/a  n=0
 <p>Now you should have an &quot;add.wasm&quot; module in your webpack compilation folder that exports a function &quot;add&quot;.</p>
 <h3>2. Running</h3>
 <p>Assume the built example module from Step 1.</p>
-<pre class="prettyprint source lang-ts"><code>import wascModule from 'wasc-worker';
+<pre class="prettyprint source lang-ts"><code>import wascWorker from 'wasc-worker';
 
 // Method 1:
-wascModule('add.wasm')
+wascWorker('add.wasm')
   .then(module => {
     return module.exports.add(1, 2);
   })
@@ -185,7 +182,7 @@ wascModule('add.wasm')
 // Method 2
 // run js functions inside the worker thread/context
 // to access importObject for example
-wascModule('add.wasm')
+wascWorker('add.wasm')
   .then(module => {
     return module.run(({ module, instance, importObject, params }) => {
       const { exports } = instance;
@@ -199,18 +196,24 @@ wascModule('add.wasm')
   });
 </code></pre>
 <h3>API</h3>
-<p>Here you can see the actual interface(s).</p>
+<p>Almost everything of the API has been made type-safe.</p>
 <h4><a href="https://hexxone.github.io/we_utils/WascInterface.html">Documentation</a></h4>
 <h2>Browser support</h2>
-<p><code>wasc-worker</code> uses <a href="https://developer.mozilla.org/it/docs/Web/API/Fetch_API">fetch</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">Worker</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly">WebAssembly</a> APIs, they are broadly supported by major browser engines but youprobably need to polyfill them to support old versions (e.g. IE).</p>
+<p><code>wasc-worker</code> uses <a href="https://developer.mozilla.org/it/docs/Web/API/Fetch_API">fetch</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">Worker</a> and
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly">WebAssembly</a>
+APIs, they are broadly supported by major browser engines but youprobably need to polyfill them (e.g. wth babel) to support old versions (like IE).</p>
 <h3>Content-Security-Policy</h3>
 <p>If your app has a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy">Content-Security-Policy</a>,
 wasc-worker require <code>worker-src data:</code> and <code>script-src data:</code> in your config.</p>
 <h2>Inspiration</h2>
-<p>This project is inspired by <a href="https://github.com/developit/greenlet">greenlet</a>.</p>
+<p>The project is inspired by <a href="https://github.com/developit/greenlet">greenlet</a>.</p>
 <h2>Original Change Log</h2>
-<p>This project adhered to <a href="http://semver.org/">Semantic Versioning</a>.<br>
-Every old release, along with the migration instructions, is documented on the Github <a href="https://github.com/mbasso/wasm-worker/releases">Releases</a> page.</p>
+<blockquote>
+<p>The github Code of Conduct applies to this project.</p>
+</blockquote>
+<p>This project adhered to <a href="http://semver.org/">Semantic Versioning</a>.</p>
+<p>Every old release, along with the migration instructions, is documented on the Github <a href="https://github.com/mbasso/wasm-worker/releases">Releases</a> page.</p>
 <h2>Authors</h2>
 <p><strong>Matteo Basso</strong></p>
 <ul>
@@ -218,8 +221,8 @@ Every old release, along with the migration instructions, is documented on the G
 <li><a href="https://twitter.com/teo_basso">@teo_basso</a></li>
 </ul>
 <h2>Copyright and License</h2>
-<p>Original Author:</p>
-<p>Copyright (c) 2018, Matteo Basso.</p>
+<p>Original Author:
+Copyright (c) 2018, Matteo Basso.</p>
 <p>wasm-worker source code is licensed under the <a href="https://github.com/mbasso/wasm-worker/blob/master/LICENSE.md">MIT License</a>.</p></article>
     </section>
 

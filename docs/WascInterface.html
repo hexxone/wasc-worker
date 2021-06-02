@@ -66,14 +66,14 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#WascRun">WascRun</a></li><li><a href="global.html#wascSchema">wascSchema</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascLoader.html">WascLoader</a></li></ul><h3>Interfaces</h3><ul><li><a href="ASUtil.html">ASUtil</a></li><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#staticImports">staticImports</a></li><li><a href="global.html#wascSchema">wascSchema</a></li><li><a href="global.html#wascWorker">wascWorker</a></li></ul></div>
                 
             </nav>
         </div>
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Class</p>
+                    <p>Interface</p>
                     <h1>WascInterface</h1>
                 </header>
                 
@@ -85,9 +85,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>WascInterface<span class="signature">()</span><span class="type-signature"></span></h2>
-        
-            <div class="class-description">shared interface for loading a module</div>
+        <h2>WascInterface</h2>
         
     
 </header>
@@ -96,40 +94,10 @@
     <div class="container-overview">
     
         
-            <div class='vertical-section'>
-                <div class="members">
-                    <div class="member">
-                        <div class=name>
-                            <span class="tag">Constructor</span>
-                        </div>
-                        
-
-
-    
-    <h4 class="name" id="WascInterface">
-        <a class="href-link" href="#WascInterface">#</a>
+            <div class="description">shared interface for loading a module</div>
         
-        <span class="code-name">
-            
-                new WascInterface<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
 
-    
-    
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
 <dl class="details">
@@ -160,6 +128,13 @@
     
 
     
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>{<a href="WascLoader.html">WascLoader</a>}</li>
+        </ul>
+    </dd>
+    
 
     
 
@@ -167,51 +142,17 @@
         <p class="tag-source">
             <a href="WascInterface.ts.html" class="button">View Source</a>
             <span>
-                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line13">line 13</a>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line185">line 185</a>
             </span>
         </p>
     
 </dl>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-                </div>
-            </div>
         
     
     </div>
     
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="WascBasic.html">WascBasic</a></li>
-    </ul>
-
-
     
 
     
@@ -234,7 +175,7 @@
     <span class="method-parameter is-pulled-right">
         <label>Type:</label>
         
-<span class="param-type">ASUtil</span>
+<span class="param-type"><a href="ASUtil.html">ASUtil</a></span>
 
 
     </span>
@@ -266,11 +207,6 @@
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="WascBasic.html#exports">WascBasic#exports</a>
-    </li></ul></dd>
-    
 
     
 
@@ -295,7 +231,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="https://www.assemblyscript.org/loader.html#module-instance-utility">https://www.assemblyscript.org/loader.html#module-instance-utility</a></li>
+            <li>{<a href="ASUtil.html">ASUtil</a>}</li>
         </ul>
     </dd>
     
@@ -306,185 +242,7 @@
         <p class="tag-source">
             <a href="WascInterface.ts.html" class="button">View Source</a>
             <span>
-                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line40">line 40</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-    <span class="method-parameter is-pulled-right">
-        <label>Type:</label>
-        
-<span class="param-type">WebAssembly.Instance</span>
-
-
-    </span>
-
-<h4 class="name" id="instance">
-    <a class="href-link" href="#instance">#</a>
-    
-    <span class="code-name">
-        instance
-    </span>
-    
-</h4>
-
-
-
-
-<div class="description">
-    loaded WebAssembly.Instance
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="WascBasic.html#instance">WascBasic#instance</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Instance">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Instance</a></li>
-        </ul>
-    </dd>
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="WascInterface.ts.html" class="button">View Source</a>
-            <span>
-                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line34">line 34</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-    <span class="method-parameter is-pulled-right">
-        <label>Type:</label>
-        
-<span class="param-type">WebAssembly.Module</span>
-
-
-    </span>
-
-<h4 class="name" id="module">
-    <a class="href-link" href="#module">#</a>
-    
-    <span class="code-name">
-        module
-    </span>
-    
-</h4>
-
-
-
-
-<div class="description">
-    loaded WebAssembly.Module
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="WascBasic.html#module">WascBasic#module</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Module">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Module</a></li>
-        </ul>
-    </dd>
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="WascInterface.ts.html" class="button">View Source</a>
-            <span>
-                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line28">line 28</a>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line191">line 191</a>
             </span>
         </p>
     
@@ -561,7 +319,7 @@
         <p class="tag-source">
             <a href="WascInterface.ts.html" class="button">View Source</a>
             <span>
-                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line46">line 46</a>
+                <a href="WascInterface.ts.html">WascInterface.ts</a>, <a href="WascInterface.ts.html#line198">line 198</a>
             </span>
         </p>
     

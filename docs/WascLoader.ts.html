@@ -1,4 +1,91 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> WascLoader.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascLoader.html">WascLoader</a></li></ul><h3>Interfaces</h3><ul><li><a href="ASUtil.html">ASUtil</a></li><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#staticImports">staticImports</a></li><li><a href="global.html#wascSchema">wascSchema</a></li><li><a href="global.html#wascWorker">wascWorker</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>WascLoader.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
 import {Module} from 'assemblyscript';
 import {ASUtil, WascBasic} from './WascInterface';
 
@@ -15,13 +102,13 @@ export class WascLoader {
 	STRING_ID = 1;
 
 	// Runtime type information
-	ARRAYBUFFERVIEW = 1 << 0;
-	ARRAY = 1 << 1;
-	STATICARRAY = 1 << 2;
+	ARRAYBUFFERVIEW = 1 &lt;&lt; 0;
+	ARRAY = 1 &lt;&lt; 1;
+	STATICARRAY = 1 &lt;&lt; 2;
 	VAL_ALIGN_OFFSET = 6;
-	VAL_SIGNED = 1 << 11;
-	VAL_FLOAT = 1 << 12;
-	VAL_MANAGED = 1 << 14;
+	VAL_SIGNED = 1 &lt;&lt; 11;
+	VAL_FLOAT = 1 &lt;&lt; 12;
+	VAL_MANAGED = 1 &lt;&lt; 14;
 
 	// Array(BufferView) layout
 	ARRAYBUFFERVIEW_BUFFER_OFFSET = 0;
@@ -54,7 +141,7 @@ export class WascLoader {
 	private getStringImpl(buffer: ArrayBuffer, ptr: number) {
 		const len = new Uint32Array(buffer)[ptr + this.SIZE_OFFSET >>> 2] >>> 1;
 		const arr = new Uint16Array(buffer, ptr, len);
-		if (len <= this.STRING_DECODE_THRESHOLD) {
+		if (len &lt;= this.STRING_DECODE_THRESHOLD) {
 			return String.fromCharCode(...arr);
 		}
 		return this.decoder.decode(arr);
@@ -69,7 +156,7 @@ export class WascLoader {
 		const extendedExports: WebAssembly.Exports = {};
 
 		const getString = (memory: WebAssembly.Memory, ptr: number) => {
-			if (!memory) return '<yet unknown>';
+			if (!memory) return '&lt;yet unknown>';
 			return this.getStringImpl(memory.buffer, ptr);
 		};
 
@@ -140,7 +227,7 @@ export class WascLoader {
 		*/
 		const getArrayInfo = (id) => {
 			const info = getInfo(id);
-			if (!(info & (this.ARRAYBUFFERVIEW | this.ARRAY | this.STATICARRAY))) throw Error(`not an array: ${id}, flags=${info}`);
+			if (!(info &amp; (this.ARRAYBUFFERVIEW | this.ARRAY | this.STATICARRAY))) throw Error(`not an array: ${id}, flags=${info}`);
 			return info;
 		};
 
@@ -162,7 +249,7 @@ export class WascLoader {
 		* @return {number}
 		*/
 		const getValueAlign = (info) => {
-			return 31 - Math.clz32((info >>> this.VAL_ALIGN_OFFSET) & 31); // -1 if none
+			return 31 - Math.clz32((info >>> this.VAL_ALIGN_OFFSET) &amp; 31); // -1 if none
 		};
 
 		/**
@@ -234,9 +321,9 @@ export class WascLoader {
 		const __newString: ASUtil['__newString'] = (str) => {
 			if (str == null) return 0;
 			const length = str.length;
-			const ptr = __new(length << 1, this.STRING_ID);
+			const ptr = __new(length &lt;&lt; 1, this.STRING_ID);
 			const U16 = new Uint16Array(memory.buffer);
-			for (let i = 0, p = ptr >>> 1; i < length; ++i) U16[p + i] = str.charCodeAt(i);
+			for (let i = 0, p = ptr >>> 1; i &lt; length; ++i) U16[p + i] = str.charCodeAt(i);
 			return ptr;
 		};
 
@@ -252,24 +339,24 @@ export class WascLoader {
 			const info = getArrayInfo(id);
 			const align = getValueAlign(info);
 			const length = values.length;
-			const buf = __new(length << align, info & this.STATICARRAY ? id : this.ARRAYBUFFER_ID);
+			const buf = __new(length &lt;&lt; align, info &amp; this.STATICARRAY ? id : this.ARRAYBUFFER_ID);
 			let result;
-			if (info & this.STATICARRAY) {
+			if (info &amp; this.STATICARRAY) {
 				result = buf;
 			} else {
 				__pin(buf);
-				const arr = __new(info & this.ARRAY ? this.ARRAY_SIZE : this.ARRAYBUFFERVIEW_SIZE, id);
+				const arr = __new(info &amp; this.ARRAY ? this.ARRAY_SIZE : this.ARRAYBUFFERVIEW_SIZE, id);
 				__unpin(buf);
 				const U32 = new Uint32Array(memory.buffer);
 				U32[arr + this.ARRAYBUFFERVIEW_BUFFER_OFFSET >>> 2] = buf;
 				U32[arr + this.ARRAYBUFFERVIEW_DATASTART_OFFSET >>> 2] = buf;
-				U32[arr + this.ARRAYBUFFERVIEW_DATALENGTH_OFFSET >>> 2] = length << align;
-				if (info & this.ARRAY) U32[arr + this.ARRAY_LENGTH_OFFSET >>> 2] = length;
+				U32[arr + this.ARRAYBUFFERVIEW_DATALENGTH_OFFSET >>> 2] = length &lt;&lt; align;
+				if (info &amp; this.ARRAY) U32[arr + this.ARRAY_LENGTH_OFFSET >>> 2] = length;
 				result = arr;
 			}
-			const view = getView(align, info & this.VAL_SIGNED, info & this.VAL_FLOAT);
-			if (info & this.VAL_MANAGED) {
-				for (let i = 0; i < length; ++i) {
+			const view = getView(align, info &amp; this.VAL_SIGNED, info &amp; this.VAL_FLOAT);
+			if (info &amp; this.VAL_MANAGED) {
+				for (let i = 0; i &lt; length; ++i) {
 					const value = values[i];
 					view[(buf >>> align) + i] = value;
 				}
@@ -284,20 +371,20 @@ export class WascLoader {
 			const id = U32[arr + this.ID_OFFSET >>> 2];
 			const info = getArrayInfo(id);
 			const align = getValueAlign(info);
-			let buf = info & this.STATICARRAY ?
+			let buf = info &amp; this.STATICARRAY ?
 				arr :
 				U32[arr + this.ARRAYBUFFERVIEW_DATASTART_OFFSET >>> 2];
-			const length = info & this.ARRAY ?
+			const length = info &amp; this.ARRAY ?
 				U32[arr + this.ARRAY_LENGTH_OFFSET >>> 2] :
 				U32[buf + this.SIZE_OFFSET >>> 2] >>> align;
-			return getView(align, info & this.VAL_SIGNED, info & this.VAL_FLOAT).subarray(buf >>>= align, buf + length);
+			return getView(align, info &amp; this.VAL_SIGNED, info &amp; this.VAL_FLOAT).subarray(buf >>>= align, buf + length);
 		};
 
 		const __getArray: ASUtil['__getArray'] = (arr) => {
 			const input = __getArrayView(arr);
 			const len = input.length;
 			const out = new Array(len);
-			for (let i = 0; i < len; i++) out[i] = input[i];
+			for (let i = 0; i &lt; len; i++) out[i] = input[i];
 			return out;
 		};
 
@@ -310,7 +397,7 @@ export class WascLoader {
 		const __instanceof: ASUtil['__instanceof'] = (ptr, baseId) => {
 			const U32 = new Uint32Array(memory.buffer);
 			let id = U32[ptr + this.ID_OFFSET >>> 2];
-			if (id <= getRttiCount(U32)) {
+			if (id &lt;= getRttiCount(U32)) {
 				do {
 					if (id == baseId) return true;
 					id = getBase(id);
@@ -365,7 +452,7 @@ export class WascLoader {
 	* @return {boolean} param instanceof Fetch Response
 	*/
 	private isResponse(src) {
-		return typeof Response !== 'undefined' && src instanceof Response;
+		return typeof Response !== 'undefined' &amp;&amp; src instanceof Response;
 	}
 
 	/**
@@ -461,7 +548,7 @@ export class WascLoader {
 							enumerable: true,
 						});
 					}
-				} else if (typeof elem === 'function' && elem !== setArgumentsLength) {
+				} else if (typeof elem === 'function' &amp;&amp; elem !== setArgumentsLength) {
 					((curr[name] = (...args) => {
 						setArgumentsLength(args.length);
 						return elem(...args);
@@ -478,10 +565,10 @@ export class WascLoader {
 	* Asynchronously instantiates an AssemblyScript module from anything that can be instantiated.
 	* @param {Object} source
 	* @param {Object} imports (optional)
-	* @return {Promise<WascBasic>}
+	* @return {Promise&lt;WascBasic>}
 	* @public
 	*/
-	public async instantiate(source, imports = {}): Promise<WascBasic> {
+	public async instantiate(source, imports = {}): Promise&lt;WascBasic> {
 		if (this.isResponse(source = await source)) return this.instantiateStreaming(source, imports);
 
 		const module: Module = this.isModule(source) ? source : await WebAssembly.compile(source);
@@ -510,10 +597,10 @@ export class WascLoader {
 	* Asynchronously instantiates an AssemblyScript module from a response, i.e. as obtained by `fetch`.
 	* @param {Object} source
 	* @param {Object} imports (optional)
-	* @return {Promise<WascBasic>}
+	* @return {Promise&lt;WascBasic>}
 	* @public
 	*/
-	public async instantiateStreaming(source, imports = {}): Promise<WascBasic> {
+	public async instantiateStreaming(source, imports = {}): Promise&lt;WascBasic> {
 		if (!WebAssembly.instantiateStreaming) {
 			return this.instantiate(
 				this.isResponse(source = await source) ?
@@ -529,3 +616,32 @@ export class WascLoader {
 	}
 }
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

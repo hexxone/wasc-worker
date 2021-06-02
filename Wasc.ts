@@ -12,17 +12,20 @@
 
 'use strict';
 
-import loader from '@assemblyscript/loader';
-import {makeRuntime, myFetch, ACTIONS, getTransferableParams, INITIAL_MEM} from './WascRT';
+import {WascLoader} from './WascLoader';
+import {myFetch, ACTIONS, getTransferableParams} from './WascUtil';
 
 const wascw: Worker = self as any;
-const memory = new WebAssembly.Memory({initial: INITIAL_MEM});
+const memory = new WebAssembly.Memory({initial: 4096}); // @TODO customize
 
 let ascImports: {};
 let ascInstance: WebAssembly.Instance;
 let ascModule: WebAssembly.Module;
 let ascExports: any;
 
+/**
+ * @public
+ */
 const staticImports = {
 	env: {
 		memory,
@@ -32,19 +35,18 @@ const staticImports = {
 		logi(value) {
 			console.log('U32: ' + value);
 		},
-		logU32Array(ptr) {
-			console.log(ascExports.getU32Array(ptr));
-		},
-		logF64Array(ptr) {
-			console.log(ascExports.getF64Array(ptr));
-		},
 	},
 };
 
 wascw.addEventListener('message', (e) => {
 	const {id, action, payload, getImportObject} = e.data;
 
-	const sendMessage = (result, payload) => {
+	/**
+	 * @param {number} result worker success = 0 | error = 1
+	 * @param {Object} payload worker result | error msg
+	 * @public
+	 */
+	const sendMessage = (result: number, payload: any) => {
 		wascw.postMessage({
 			id,
 			action,
@@ -53,38 +55,31 @@ wascw.addEventListener('message', (e) => {
 		}, getTransferableParams(payload));
 	};
 
-	const onError = (ex) => sendMessage(1, '' + ex);
-	const onSuccess = sendMessage.bind(null, 0);
+	const onError = (ex) => sendMessage(1, ex);
+	const onSuccess = (res) => sendMessage(0, res);
 
 	if (action === ACTIONS.COMPILE_MODULE) {
 		Promise.resolve()
 			.then(async () => {
 			// get import object
 				ascImports = Object.assign({}, staticImports);
-				if (getImportObject !== undefined) {
+				if (typeof getImportObject == 'function') {
 					Object.assign(ascImports, getImportObject());
 				}
 
 				// make webassembly
 				const byteModule = await myFetch(payload);
-				const {module, instance, exports} = loader.instantiateSync(byteModule, ascImports);
-
-				// get Runtime Exports
-				const rtExports = makeRuntime(
-					memory,
-					exports.allocF64Array,
-					exports.allocU32Array,
-				);
-
-				// Add Helpers
-				Object.assign(exports, {...rtExports});
+				const inst = new WascLoader().instantiateSync(byteModule, ascImports);
 
 				// remembr module
-				ascModule = module;
-				ascInstance = instance;
-				ascExports = exports;
+				ascModule = inst.module;
+				ascInstance = inst.instance;
+				ascExports = inst.exports;
 
-				// return available methods as strings to main ctx
+				/**
+				 * return available methods as strings to main ctx
+				 * @public
+				 */
 				onSuccess({
 					exports: Object.keys(ascExports),
 				});
@@ -93,19 +88,20 @@ wascw.addEventListener('message', (e) => {
 	} else if (action === ACTIONS.CALL_FUNCTION_EXPORT) {
 		const {func, params} = payload;
 
-		Promise.resolve()
-			.then(() => {
-				// run the function with parameters
-				// eslint-disable-next-line prefer-spread
-				onSuccess(ascExports[func].apply(ascExports, params));
-			})
-			.catch(onError);
+		Promise.resolve().then(() => {
+			// run the function with parameters
+			// eslint-disable-next-line prefer-spread
+			onSuccess(ascExports[func].apply(ascExports, params));
+		}).catch(onError);
 	} else if (action === ACTIONS.RUN_FUNCTION) {
 		const {func, params} = payload;
 
 		Promise.resolve()
 			.then(() => {
 				const fun = new Function(`return ${func}`)();
+				/**
+				 * @public
+				 */
 				onSuccess(fun({
 					module: ascModule,
 					instance: ascInstance,

@@ -1,19 +1,18 @@
-# wasc-worker
+# [wasc-worker](https://github.com/hexxone/wasc-worker)
 
 is a custom fork of:
-## wasm-worker
+## [wasm-worker](https://github.com/mbasso/wasm-worker)
 
-### Please see Authors and Copyright below!
+#### Please see Authors and Copyright below!
 
-### The github Code of Conduct applies to this project. Although this should not be worth mentioning.
-
-> Build AssemblyScript modules and use them in Workers
+## Build AssemblyScript modules and use them in Workers
 
 This repository includes a WebPack Plugin called "WascBuilderPlugin" for compiling AssemblyScript (a Typescript-variant) to WebAssembly modules. => Usage => Compiling
 
 At the same time, it can be used to load and run the module in a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers). => Usage => Running
 
 This repo mainly targets browser environments, because it uses the [worker_loader](https://github.com/webpack-contrib/worker-loader). Anything else has not been tested.
+
 
 ## Install
 
@@ -24,6 +23,7 @@ git submodule add path/to/put/wasc-worker https://github.com/hexxone/wasc-worker
 ```
 
 At a later time, there might be a node-package. But for now it is "experimental" and intended for TypeScript usage...
+
 
 ## Usage:
 
@@ -91,10 +91,10 @@ Now you should have an "add.wasm" module in your webpack compilation folder that
 Assume the built example module from Step 1.
 
 ```ts
-import wascModule from 'wasc-worker';
+import wascWorker from 'wasc-worker';
 
 // Method 1:
-wascModule('add.wasm')
+wascWorker('add.wasm')
   .then(module => {
     return module.exports.add(1, 2);
   })
@@ -109,7 +109,7 @@ wascModule('add.wasm')
 // Method 2
 // run js functions inside the worker thread/context
 // to access importObject for example
-wascModule('add.wasm')
+wascWorker('add.wasm')
   .then(module => {
     return module.run(({ module, instance, importObject, params }) => {
       const { exports } = instance;
@@ -125,14 +125,17 @@ wascModule('add.wasm')
 
 ### API
 
-Here you can see the actual interface(s).
+Almost everything of the API has been made type-safe.
 
 #### [Documentation](https://hexxone.github.io/we_utils/WascInterface.html)
 
 
 ## Browser support
 
-`wasc-worker` uses [fetch](https://developer.mozilla.org/it/docs/Web/API/Fetch_API), [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) and [WebAssembly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly) APIs, they are broadly supported by major browser engines but youprobably need to polyfill them to support old versions (e.g. IE).
+`wasc-worker` uses [fetch](https://developer.mozilla.org/it/docs/Web/API/Fetch_API),
+[Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) and
+[WebAssembly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly)
+APIs, they are broadly supported by major browser engines but youprobably need to polyfill them (e.g. wth babel) to support old versions (like IE).
 
 
 ### Content-Security-Policy
@@ -143,12 +146,15 @@ wasc-worker require `worker-src data:` and `script-src data:` in your config.
 
 ## Inspiration
 
-This project is inspired by [greenlet](https://github.com/developit/greenlet).
+The project is inspired by [greenlet](https://github.com/developit/greenlet).
 
 
 ## Original Change Log
 
-This project adhered to [Semantic Versioning](http://semver.org/).  
+> The github Code of Conduct applies to this project.
+
+This project adhered to [Semantic Versioning](http://semver.org/).
+
 Every old release, along with the migration instructions, is documented on the Github [Releases](https://github.com/mbasso/wasm-worker/releases) page.
 
 
@@ -159,8 +165,8 @@ Every old release, along with the migration instructions, is documented on the G
 
 
 ## Copyright and License
-Original Author:
 
+Original Author:
 Copyright (c) 2018, Matteo Basso.
 
 wasm-worker source code is licensed under the [MIT License](https://github.com/mbasso/wasm-worker/blob/master/LICENSE.md).

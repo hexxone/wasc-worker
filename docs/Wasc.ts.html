@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> WascWorker.ts</title>
+  <title> Wasc.ts</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -68,7 +68,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#WascRun">WascRun</a></li><li><a href="global.html#wascSchema">wascSchema</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="WascBuilderPlugin.html">WascBuilderPlugin</a></li><li><a href="WascLoader.html">WascLoader</a></li></ul><h3>Interfaces</h3><ul><li><a href="ASUtil.html">ASUtil</a></li><li><a href="WascBasic.html">WascBasic</a></li><li><a href="WascInterface.html">WascInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getTransferableParams">getTransferableParams</a></li><li><a href="global.html#myFetch">myFetch</a></li><li><a href="global.html#staticImports">staticImports</a></li><li><a href="global.html#wascSchema">wascSchema</a></li><li><a href="global.html#wascWorker">wascWorker</a></li></ul></div>
                 
             </nav>
         </div>
@@ -76,7 +76,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>WascWorker.ts</h1>
+                    <h1>Wasc.ts</h1>
                 </header>
                 
 
@@ -86,36 +86,120 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @author Matteo Basso @https://github.com/mbasso
- * @author hexxone / https://hexx.one
- *
- * @license
- * Copyright (c) 2021 hexxone All rights reserved.
- * Licensed under the GNU GENERAL PUBLIC LICENSE.
- * See LICENSE file in the project root for full license information.
- *
+* @author hexxone / https://hexx.one
+*
+* @license
+* Copyright (c) 2021 hexxone All rights reserved.
+* Licensed under the GNU GENERAL PUBLIC LICENSE.
+* See LICENSE file in the project root for full license information.
+*
+* @description
+* Web-AssemblyScript Worker
 */
 
-import {WascInterface} from './WascInterface';
-import {LoadInline, LoadWorker} from './WascLoader';
+'use strict';
+
+import {WascLoader} from './WascLoader';
+import {myFetch, ACTIONS, getTransferableParams} from './WascUtil';
+
+const wascw: Worker = self as any;
+const memory = new WebAssembly.Memory({initial: 4096}); // @TODO customize
+
+let ascImports: {};
+let ascInstance: WebAssembly.Instance;
+let ascModule: WebAssembly.Module;
+let ascExports: any;
 
 /**
- * Initializes a new WebAssembly instance.
- * @param {string} source compiled .wasm module path
- * @param {Object} options passed to the module init
- * @param {boolean} useWorker use worker or inline
- * @return {Promise&lt;WascInterface>} the initialized context
+ * @public
  */
-export default function WascWorker(source: string, options: any = {}, useWorker: boolean = true): Promise&lt;WascInterface> {
-	return new Promise(async (resolve) => {
-		// initialize the actual module
-		const promiseMe = (useWorker &amp;&amp; Worker) ? LoadWorker : LoadInline;
-		const result = await promiseMe(source, options);
+const staticImports = {
+	env: {
+		memory,
+		logf(value) {
+			console.log('F64: ' + value);
+		},
+		logi(value) {
+			console.log('U32: ' + value);
+		},
+	},
+};
 
-		// return the freshly initialized module
-		resolve(result);
-	});
-}
+wascw.addEventListener('message', (e) => {
+	const {id, action, payload, getImportObject} = e.data;
+
+	/**
+	 * @param {number} result worker success = 0 | error = 1
+	 * @param {Object} payload worker result | error msg
+	 * @public
+	 */
+	const sendMessage = (result: number, payload: any) => {
+		wascw.postMessage({
+			id,
+			action,
+			result,
+			payload,
+		}, getTransferableParams(payload));
+	};
+
+	const onError = (ex) => sendMessage(1, ex);
+	const onSuccess = (res) => sendMessage(0, res);
+
+	if (action === ACTIONS.COMPILE_MODULE) {
+		Promise.resolve()
+			.then(async () => {
+			// get import object
+				ascImports = Object.assign({}, staticImports);
+				if (typeof getImportObject == 'function') {
+					Object.assign(ascImports, getImportObject());
+				}
+
+				// make webassembly
+				const byteModule = await myFetch(payload);
+				const inst = new WascLoader().instantiateSync(byteModule, ascImports);
+
+				// remembr module
+				ascModule = inst.module;
+				ascInstance = inst.instance;
+				ascExports = inst.exports;
+
+				/**
+				 * return available methods as strings to main ctx
+				 * @public
+				 */
+				onSuccess({
+					exports: Object.keys(ascExports),
+				});
+			})
+			.catch(onError);
+	} else if (action === ACTIONS.CALL_FUNCTION_EXPORT) {
+		const {func, params} = payload;
+
+		Promise.resolve().then(() => {
+			// run the function with parameters
+			// eslint-disable-next-line prefer-spread
+			onSuccess(ascExports[func].apply(ascExports, params));
+		}).catch(onError);
+	} else if (action === ACTIONS.RUN_FUNCTION) {
+		const {func, params} = payload;
+
+		Promise.resolve()
+			.then(() => {
+				const fun = new Function(`return ${func}`)();
+				/**
+				 * @public
+				 */
+				onSuccess(fun({
+					module: ascModule,
+					instance: ascInstance,
+					exports: ascExports,
+					params,
+				}));
+			})
+			.catch(onError);
+	}
+});
+
 </code></pre>
         </article>
     </section>
