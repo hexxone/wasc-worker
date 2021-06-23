@@ -11,6 +11,32 @@
 */
 
 /**
+* Worker <-> Maincontext communication
+* @public
+*/
+/* eslint-disable no-unused-vars */
+enum ACTIONS {
+	COMPILE_MODULE = 0,
+	CALL_FUNCTION_EXPORT = 1,
+	RUN_FUNCTION = 2
+}
+
+/**
+* Filter out transferrable parameters for passing into WebWorkers
+* @public
+* @param {Object} params The given Items to filter
+* @return {Object} WebWorker-passable items
+*/
+function getTransferableParams(...params: any): any {
+	return params.filter((x) => (
+		(x instanceof ArrayBuffer) ||
+		(x instanceof MessagePort) ||
+		(x instanceof ImageBitmap)
+	)) || [];
+}
+
+
+/**
 * Small reusable fetch function, should work for local & web server files
 * @public
 * @param {string} path file to request
@@ -18,7 +44,7 @@
 * @param {string} owMime force-override mime-type (optional)
 * @return {Object} XMLHttpRequest.response (converted to resType)
 */
-export function myFetch(path: string, resType: string = 'arraybuffer', owMime?: string): Promise<any> {
+function myFetch(path: string, resType: string = 'arraybuffer', owMime?: string): Promise<any> {
 	return new Promise((res) => {
 		const request = new XMLHttpRequest();
 		request.open('GET', path);
@@ -32,29 +58,4 @@ export function myFetch(path: string, resType: string = 'arraybuffer', owMime?: 
 	});
 }
 
-/**
-* Worker <-> Maincontext communication
-* @public
-*/
-/* eslint-disable no-unused-vars */
-export enum ACTIONS {
-	COMPILE_MODULE = 0,
-	CALL_FUNCTION_EXPORT = 1,
-	RUN_FUNCTION = 2
-}
-
-/**
-* Filter out transferrable parameters for passing into WebWorkers
-* @public
-* @param {Object} params The given Items to filter
-* @return {Object} WebWorker-passable items
-*/
-export function getTransferableParams(...params: any): any {
-	return params.filter((x) => (
-		(x instanceof ArrayBuffer) ||
-		(x instanceof MessagePort) ||
-		(x instanceof ImageBitmap)
-	)) || [];
-}
-
-
+export const WascUtil = {ACTIONS, getTransferableParams, myFetch};

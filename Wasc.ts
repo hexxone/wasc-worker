@@ -13,7 +13,7 @@
 'use strict';
 
 import {WascLoader} from './WascLoader';
-import {myFetch, ACTIONS, getTransferableParams} from './WascUtil';
+import {WascUtil} from './WascUtil';
 
 const wascw: Worker = self as any;
 const memory = new WebAssembly.Memory({initial: 4096}); // @TODO customize
@@ -52,13 +52,13 @@ wascw.addEventListener('message', (e) => {
 			action,
 			result,
 			payload,
-		}, getTransferableParams(payload));
+		}, WascUtil.getTransferableParams(payload));
 	};
 
 	const onError = (ex) => sendMessage(1, ex);
 	const onSuccess = (res) => sendMessage(0, res);
 
-	if (action === ACTIONS.COMPILE_MODULE) {
+	if (action === WascUtil.ACTIONS.COMPILE_MODULE) {
 		Promise.resolve()
 			.then(async () => {
 			// get import object
@@ -68,7 +68,7 @@ wascw.addEventListener('message', (e) => {
 				}
 
 				// make webassembly
-				const byteModule = await myFetch(payload);
+				const byteModule = await WascUtil.myFetch(payload);
 				const inst = new WascLoader().instantiateSync(byteModule, ascImports);
 
 				// remembr module
@@ -85,7 +85,7 @@ wascw.addEventListener('message', (e) => {
 				});
 			})
 			.catch(onError);
-	} else if (action === ACTIONS.CALL_FUNCTION_EXPORT) {
+	} else if (action === WascUtil.ACTIONS.CALL_FUNCTION_EXPORT) {
 		const {func, params} = payload;
 
 		Promise.resolve().then(() => {
@@ -93,7 +93,7 @@ wascw.addEventListener('message', (e) => {
 			// eslint-disable-next-line prefer-spread
 			onSuccess(ascExports[func].apply(ascExports, params));
 		}).catch(onError);
-	} else if (action === ACTIONS.RUN_FUNCTION) {
+	} else if (action === WascUtil.ACTIONS.RUN_FUNCTION) {
 		const {func, params} = payload;
 
 		Promise.resolve()

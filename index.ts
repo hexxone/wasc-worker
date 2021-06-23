@@ -15,7 +15,7 @@ import WascWorker from 'worker-loader!./Wasc';
 import {Smallog} from '../Smallog';
 
 import {WascInterface} from './WascInterface';
-import {ACTIONS, getTransferableParams, myFetch} from './WascUtil';
+import {WascUtil} from './WascUtil';
 
 /**
 * Initializes a new WebAssembly instance.
@@ -77,7 +77,7 @@ function loadInline(path: string, initialMem: number, options: any): Promise<Was
 			Object.assign(myImports, getImportObject());
 		}
 
-		const byteModule = await myFetch(path);
+		const byteModule = await WascUtil.myFetch(path);
 		const inst = new WascLoader().instantiateSync(byteModule, myImports);
 
 		/**
@@ -129,7 +129,7 @@ function loadWorker(source: string, options): Promise<WascInterface> {
 		worker.onmessage = (e) => {
 			const {id, result, action, payload} = e.data;
 
-			if (action === ACTIONS.COMPILE_MODULE) {
+			if (action === WascUtil.ACTIONS.COMPILE_MODULE) {
 				// COMPILE MODULE & RESOLVE EXPORTS
 				if (result === 0) {
 					// SUCCESS
@@ -144,12 +144,12 @@ function loadWorker(source: string, options): Promise<WascInterface> {
 								promises[++promCnt] = rest;
 								worker.postMessage({
 									id: promCnt,
-									action: ACTIONS.CALL_FUNCTION_EXPORT,
+									action: WascUtil.ACTIONS.CALL_FUNCTION_EXPORT,
 									payload: {
 										func: exp,
 										params,
 									},
-								}, getTransferableParams(params));
+								}, WascUtil.getTransferableParams(params));
 							}),
 						}), {}),
 
@@ -158,12 +158,12 @@ function loadWorker(source: string, options): Promise<WascInterface> {
 							promises[++promCnt] = rest;
 							worker.postMessage({
 								id: promCnt,
-								action: ACTIONS.RUN_FUNCTION,
+								action: WascUtil.ACTIONS.RUN_FUNCTION,
 								payload: {
 									func: func.toString(),
 									params,
 								},
-							}, getTransferableParams(params));
+							}, WascUtil.getTransferableParams(params));
 						}),
 
 					});
@@ -174,8 +174,8 @@ function loadWorker(source: string, options): Promise<WascInterface> {
 
 			// CALL FUNCTION
 			} else if (
-				action === ACTIONS.CALL_FUNCTION_EXPORT ||
-				action === ACTIONS.RUN_FUNCTION
+				action === WascUtil.ACTIONS.CALL_FUNCTION_EXPORT ||
+				action === WascUtil.ACTIONS.RUN_FUNCTION
 			) {
 				promises[id][result](payload);
 			}
@@ -187,7 +187,7 @@ function loadWorker(source: string, options): Promise<WascInterface> {
 
 		worker.postMessage({
 			id: promCnt,
-			action: ACTIONS.COMPILE_MODULE,
+			action: WascUtil.ACTIONS.COMPILE_MODULE,
 			payload: source,
 		});
 	});
