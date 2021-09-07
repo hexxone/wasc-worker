@@ -17,6 +17,21 @@ import {Smallog} from '../Smallog';
 import {WascInterface} from './WascInterface';
 import {WascUtil} from './WascUtil';
 
+const LOGHEAD = '[WASC] ';
+const NO_SUPP = '>>> WebAssembly failed! Initialization cannot continue. <<<';
+
+const wasmSupport = (() => {
+	try {
+		if (typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function') {
+			const module = new WebAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
+			return (module instanceof WebAssembly.Module) && (new WebAssembly.Instance(module) instanceof WebAssembly.Instance);
+		}
+	} catch (e) {
+		Smallog.error(NO_SUPP + '\r\nReason: ' + e, LOGHEAD);
+	}
+	return false;
+})();
+
 /**
 * Initializes a new WebAssembly instance.
 * @param {string} source compiled .wasm module path
@@ -27,17 +42,24 @@ import {WascUtil} from './WascUtil';
 * @public
 */
 export function wascWorker(source: string, initialMem = 4096, options: any = {}, useWorker: boolean = true): Promise<WascInterface> {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
+		if (!wasmSupport) {
+			reject(NO_SUPP);
+			return;
+		}
 		// decide whether to use worker-threading or inline embedding.
-		const loadWrk =(useWorker && typeof(Worker) !== 'undefined');
-		Smallog.debug(`Loading ${source} as ${loadWrk ? 'worker' : 'inline'} with data=${JSON.stringify(options)}`, '[WASC] ');
+		const hasWrk = typeof(Worker) !== 'undefined';
+		if (useWorker && !hasWrk) Smallog.error('WebWorkers are not supported? Using inline loading as fallback...');
+		const loadWrk = (useWorker && hasWrk);
+		Smallog.debug(`Loading ${source} as ${loadWrk ? 'worker' : 'inline'} with data=${JSON.stringify(options)}`, LOGHEAD);
 		// initialize the actual module
 		const doLoad = loadWrk ? loadWorker : loadInline;
 		doLoad(source, initialMem, options).then((loaded) => {
 			resolve(loaded);
 		}).catch((err) => {
 			// something went south?
-			Smallog.error('init error: ' + err, '[WASC] ');
+			Smallog.error('init error: ' + err, LOGHEAD);
+			reject(err);
 		});
 	});
 }
@@ -56,7 +78,7 @@ export function wascWorker(source: string, initialMem = 4096, options: any = {},
 */
 function loadInline(path: string, initialMem: number, options: any): Promise<WascInterface> {
 	return new Promise(async (resolve) => {
-	// let ascExports: any;
+		// let ascExports: any;
 		const memory = new WebAssembly.Memory({initial: initialMem});
 		const staticImports = {
 			env: {
@@ -172,7 +194,7 @@ function loadWorker(source: string, options): Promise<WascInterface> {
 					promises[id][1](payload);
 				}
 
-			// CALL FUNCTION
+				// CALL FUNCTION
 			} else if (
 				action === WascUtil.ACTIONS.CALL_FUNCTION_EXPORT ||
 				action === WascUtil.ACTIONS.RUN_FUNCTION
