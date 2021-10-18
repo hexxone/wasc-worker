@@ -51,7 +51,7 @@ export class WascLoader {
 	* @param {number} ptr
 	* @return {string}
 	*/
-	private getStringImpl(buffer: ArrayBuffer, ptr: number) {
+	private getStringImpl(buffer: ArrayBuffer, ptr: number): string {
 		const len = new Uint32Array(buffer)[ptr + this.SIZE_OFFSET >>> 2] >>> 1;
 		const arr = new Uint16Array(buffer, ptr, len);
 		if (len <= this.STRING_DECODE_THRESHOLD) {
@@ -62,10 +62,10 @@ export class WascLoader {
 
 	/**
 	* Prepares the base module prior to instantiation.
-	* @param {Object} imports
+	* @param {any} imports
 	* @return {Object}
 	*/
-	private preInstantiate(imports) {
+	private preInstantiate(imports: any): object {
 		const extendedExports: WebAssembly.Exports = {};
 
 		const getString = (memory: WebAssembly.Memory, ptr: number) => {
@@ -95,11 +95,11 @@ export class WascLoader {
 
 	/**
 	* Prepares the final module once instantiation is complete.
-	* @param {Object} extendedExports
+	* @param {any} extendedExports
 	* @param {WebAssembly.Instance} instance
 	* @return {ASUtil}
 	*/
-	private postInstantiate(extendedExports, instance: WebAssembly.Instance): ASUtil {
+	private postInstantiate(extendedExports: any, instance: WebAssembly.Instance): ASUtil {
 		const exports = instance.exports;
 
 		const memory = exports.memory as WebAssembly.Memory;
@@ -126,7 +126,7 @@ export class WascLoader {
 		* @param {number} id internal Type ID
 		* @return {number}
 		*/
-		const getInfo = (id: number) => {
+		const getInfo = (id: number): number => {
 			const U32 = new Uint32Array(memory.buffer);
 			const count = getRttiCount(U32);
 			if ((id >>>= 0) >= count) throw Error(`invalid id: ${id}`);
@@ -138,7 +138,7 @@ export class WascLoader {
 		* @param {number} id
 		* @return {number}
 		*/
-		const getArrayInfo = (id) => {
+		const getArrayInfo = (id: number): number => {
 			const info = getInfo(id);
 			if (!(info & (this.ARRAYBUFFERVIEW | this.ARRAY | this.STATICARRAY))) throw Error(`not an array: ${id}, flags=${info}`);
 			return info;
@@ -149,7 +149,7 @@ export class WascLoader {
 		* @param {number} id
 		* @return {number}
 		*/
-		const getBase = (id) => {
+		const getBase = (id: number): number => {
 			const U32 = new Uint32Array(memory.buffer);
 			const count = getRttiCount(U32);
 			if ((id >>>= 0) >= count) throw Error(`invalid id: ${id}`);
@@ -161,7 +161,7 @@ export class WascLoader {
 		* @param {number} info
 		* @return {number}
 		*/
-		const getValueAlign = (info) => {
+		const getValueAlign = (info: number): number => {
 			return 31 - Math.clz32((info >>> this.VAL_ALIGN_OFFSET) & 31); // -1 if none
 		};
 
@@ -172,7 +172,7 @@ export class WascLoader {
 		* @param {number} float
 		* @return {Uint32Array | Float32Array | Float64Array | Uint8Array | Int8Array | Uint16Array | Int16Array | Int32Array | BigUint64Array | BigInt64Array}
 		*/
-		const getView = (alignLog2: number, signed: number, float: number) => {
+		const getView = (alignLog2: number, signed: number, float: number): Uint32Array | Float32Array | Float64Array | Uint8Array | Int8Array | Uint16Array | Int16Array | Int32Array | BigUint64Array | BigInt64Array => {
 			const buffer = memory.buffer;
 			if (float) {
 				switch (alignLog2) {
@@ -192,23 +192,23 @@ export class WascLoader {
 
 		/**
 		* Copies a typed array's values from the module's memory.
-		* @param {Object} Type constructor
+		* @param {any} Type constructor
 		* @param {number} alignLog2
 		* @param {number} ptr
 		* @return {Array}
 		*/
-		const getTypedArray = (Type, alignLog2, ptr) => {
+		const getTypedArray = (Type: any, alignLog2: number, ptr: number): Array<any> => {
 			return new Type(getTypedArrayView(Type, alignLog2, ptr));
 		};
 
 		/**
 		* Gets a live view on a typed array's values in the module's memory.
-		* @param {Object} Type constructor
+		* @param {any} Type constructor
 		* @param {number} alignLog2
 		* @param {number} ptr
 		* @return {ArrayView}
 		*/
-		const getTypedArrayView = (Type, alignLog2, ptr) => {
+		const getTypedArrayView = (Type: any, alignLog2: number, ptr: number): any => {
 			const buffer = memory.buffer;
 			const U32 = new Uint32Array(buffer);
 			const bufPtr = U32[ptr + this.ARRAYBUFFERVIEW_DATASTART_OFFSET >>> 2];
@@ -221,7 +221,7 @@ export class WascLoader {
 		* @param {string} name
 		* @param {number} align
 		*/
-		const attachTypedArrayFunctions = (ctor, name, align) => {
+		const attachTypedArrayFunctions = (ctor: object, name: string, align: number) => {
 			extendedExports[`__get${name}`] = getTypedArray.bind(null, ctor, align);
 			extendedExports[`__get${name}View`] = getTypedArrayView.bind(null, ctor, align);
 		};
@@ -362,9 +362,9 @@ export class WascLoader {
 
 	/**
 	* @param {Object} src
-	* @return {boolean} param instanceof Fetch Response
+	* @return {boolean} evalueate if param instanceof Fetch-Response
 	*/
-	private isResponse(src) {
+	private isResponse(src: object): boolean {
 		return typeof Response !== 'undefined' && src instanceof Response;
 	}
 
@@ -372,7 +372,7 @@ export class WascLoader {
 	* @param {Object} src
 	* @return {boolean} param instanceof WebAssembly.Module
 	*/
-	private isModule(src) {
+	private isModule(src: object): boolean {
 		return src instanceof WebAssembly.Module;
 	}
 
@@ -382,7 +382,7 @@ export class WascLoader {
 	* @param {Object} extendedExports
 	* @return {ASUtil} processed exports
 	*/
-	private demangle(exports, extendedExports = {}): ASUtil {
+	private demangle(exports: object, extendedExports: object = {}): ASUtil {
 		const setArgumentsLength = exports['__argumentsLength'] ?
 			(length) => {
 				exports['__argumentsLength'].value = length;
@@ -476,12 +476,12 @@ export class WascLoader {
 
 	/**
 	* Asynchronously instantiates an AssemblyScript module from anything that can be instantiated.
-	* @param {Object} source
-	* @param {Object} imports (optional)
+	* @param {Response | WebAssembly.Module | BufferSource} source
+	* @param {WebAssembly.Imports} imports (optional)
 	* @return {Promise<WascBasic>}
 	* @public
 	*/
-	public async instantiate(source, imports = {}): Promise<WascBasic> {
+	public async instantiate(source: any, imports: WebAssembly.Imports = {}): Promise<WascBasic> {
 		if (this.isResponse(source = await source)) return this.instantiateStreaming(source, imports);
 
 		const module: Module = this.isModule(source) ? source : await WebAssembly.compile(source);
@@ -493,12 +493,12 @@ export class WascLoader {
 
 	/**
 	* Synchronously instantiates an AssemblyScript module from a WebAssembly.Module or binary buffer.
-	* @param {Object} source
-	* @param {Object} imports (optional)
+	* @param {Module | BufferSource} source
+	* @param {WebAssembly.Imports} imports (optional)
 	* @return {WascBasic}
 	* @public
 	*/
-	public instantiateSync(source, imports = {}): WascBasic {
+	public instantiateSync(source: any, imports: WebAssembly.Imports = {}): WascBasic {
 		const module = this.isModule(source) ? source : new WebAssembly.Module(source);
 		const extended = this.preInstantiate(imports);
 		const instance = new WebAssembly.Instance(module, imports);
@@ -508,16 +508,16 @@ export class WascLoader {
 
 	/**
 	* Asynchronously instantiates an AssemblyScript module from a response, i.e. as obtained by `fetch`.
-	* @param {Object} source
-	* @param {Object} imports (optional)
+	* @param {Response} source
+	* @param {WebAssembly.Imports} imports (optional)
 	* @return {Promise<WascBasic>}
 	* @public
 	*/
-	public async instantiateStreaming(source, imports = {}): Promise<WascBasic> {
+	public async instantiateStreaming(source: Response, imports: WebAssembly.Imports = {}): Promise<WascBasic> {
 		if (!WebAssembly.instantiateStreaming) {
 			return this.instantiate(
 				this.isResponse(source = await source) ?
-					source.arrayBuffer() :
+					(source as Response).arrayBuffer() :
 					source,
 				imports,
 			);
