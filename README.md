@@ -3,15 +3,17 @@
 is a custom fork of:
 ## [wasm-worker](https://github.com/mbasso/wasm-worker)
 
-#### Please see Authors and Copyright below!
+### specifically designed for AssemblyScript & TypeScript.
 
-## Build AssemblyScript modules and use them in Workers
+#### Please see below for the original Author(s) and Copyright!
+
+## How to build AssemblyScript modules and use them in Workers
 
 This repository includes a WebPack Plugin called "WascBuilderPlugin" for compiling AssemblyScript (a Typescript-variant) to WebAssembly modules. => Usage => Compiling
 
 At the same time, it can be used to load and run the module in a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers). => Usage => Running
 
-This repo mainly targets browser environments, because it uses the [worker_loader](https://github.com/webpack-contrib/worker-loader). Anything else has not been tested.
+Main target are browser environments.
 
 
 ## Install
@@ -22,15 +24,17 @@ You can "install" wasc-worker using this method for now:
 git submodule add path/to/put/wasc-worker https://github.com/hexxone/wasc-worker
 ```
 
-At a later time, there might be a node-package. But for now it is "experimental" and intended for TypeScript usage...
+At a later time, there might be a node-package.
+But for now everything is "experimental"..
 
 
 ## Usage:
 
 ### 1. Compiling
 
-Notice: the extension ".asc" is used for determining the compile-targets in the next step and you can't mix different ones.
-E.g.: you cannot require "utils.ts" from "index.asc".
+Notice: the extension ".asc" is used for determining the compile-targets in the next step.
+You cannot mix different extensions.
+E.g.: you cant require "utils.ts" from "index.asc".
 If this collides with your naming scheme, you will have to alter the settings in Step 2.
 
 So.. suppose you have an "add.asc" file with this content:
@@ -83,7 +87,9 @@ Transform  :          n/a  n=0
 [WasmPlugin] finished.
 ```
 
-Now you should have an "add.wasm" module in your webpack compilation folder that exports a function "add".
+Now you should have the "add.wasm" module in your webpack compilation folder.
+
+The WebAssembly module should export the "add"-function, "memory" and [AssemblyScript runtime](https://www.assemblyscript.org/loader.html#module-instance-utility).
 
 
 ### 2. Running
@@ -125,28 +131,35 @@ wascWorker('add.wasm')
 
 ### API
 
-Almost everything of the API has been made type-safe.
+Almost everything has been made type-safe and should be self-explanatory.
 
-#### [Documentation](https://hexxone.github.io/we_utils/WascInterface.html)
+#### [Documentation](https://hexxone.github.io/we_utils/)
 
 
-## Browser support
+## Supported environments
 
 `wasc-worker` uses [fetch](https://developer.mozilla.org/it/docs/Web/API/Fetch_API),
-[Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) and
+[WebWorker's](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) and
 [WebAssembly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly)
-APIs, they are broadly supported by major browser engines but youprobably need to polyfill them (e.g. wth babel) to support old versions (like IE).
+APIs.
+
+There is a fallback included for Web-Workers, but you will need an up-to-date major Browser (like Chrome/Firefox).
+
+Node.js usage is NOT explicitly implemented & was NOT tested, so you probably have to polyfill it.
 
 
-### Content-Security-Policy
+###  Content-Security-Policy
 
-If your app has a [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy),
-wasc-worker require `worker-src data:` and `script-src data:` in your config.
-
+You will also need these HTTP Headers due to [Security Requirements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements) - following 'Spectre' from 2018.
+```
+https: true
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Embedder-Policy: require-corp
+```
 
 ## Inspiration
 
-The project is inspired by [greenlet](https://github.com/developit/greenlet).
+The project is inspired by [wasm-worker](https://github.com/mbasso/wasm-worker).
 
 
 ## Original Change Log
@@ -162,6 +175,9 @@ Every old release, along with the migration instructions, is documented on the G
 **Matteo Basso**
 - [github/mbasso](https://github.com/mbasso)
 - [@teo_basso](https://twitter.com/teo_basso)
+
+**hexxone**
+- [github/hexxone](https://github.com/hexxone)
 
 
 ## Copyright and License

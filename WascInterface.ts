@@ -10,6 +10,10 @@
 
 /**
  * Utility mixed in by the loader.
+ * https://www.assemblyscript.org/loader.html#api
+ * KEEP IN MIND:
+ * Some functions may only be available when compiled with --exportRuntime
+ * @see https://www.assemblyscript.org/loader.html#module-instance-runtime-interface
  * @public
  */
 export interface ASUtil {
@@ -74,22 +78,42 @@ export interface ASUtil {
 	/** Gets a live view on a Float64Array's values in the module's memory. */
 	__getFloat64ArrayView(ptr: number): Float64Array;
 
-	/** Allocates an instance of the class represented by the specified id. */
+	/** Allocates a new garbage collected instance of the object represented by the specified class id, of at least the specified size.
+	 * Returns the pointer to the object, typically pointing at the object's data respectively its first field.
+	 * Note that the loader provides more convenient wrappers like __newString and __newArray as well.
+	 * __new is just the underlying implementation. The respective class id for the id argument can be obtained within WebAssembly via idof<AClass>(),
+	 * typically exporting it to the host as a constant to use with __new or __newArray. */
 	__new(size: number, id: number): number;
 	/** Allocates a new string in the module's memory and returns a reference (pointer) to it. */
 	__newString(str: string): number;
 	/** Allocates a new array in the module's memory and returns a reference (pointer) to it. */
 	__newArray(id: number, values: ArrayLike<number>): number;
-	/** Retains a reference to a managed object externally, making sure that it doesn't become collected prematurely. Returns the pointer. */
+
+	/**
+	 * @deprecated at Ver>=0.18 => use __pin
+	 * Retains a reference to a managed object externally, making sure that it doesn't become collected prematurely. Returns the pointer.
+	 */
 	__retain(ptr: number): number;
-	/** Releases a previously retained reference to a managed object, allowing the runtime to collect it once its reference count reaches zero. */
+	__pin(ptr: number): number;
+
+	/**
+	 * @deprecated at Ver>=0.18 => use __unpin
+	 * Releases a previously retained reference to a managed object, allowing the runtime to collect it once its reference count reaches zero.
+	 */
 	__release(ptr: number): void;
+	__unpin(ptr: number): void;
+
 	/** Forcefully resets the heap to its initial offset, effectively clearing dynamic memory. Stub runtime only. */
 	__reset?(): void;
 	/** Tests whether a managed object is an instance of the class represented by the specified base id. */
 	__instanceof(ptr: number, baseId: number): boolean;
 	/** Forces a cycle collection. Only relevant if objects potentially forming reference cycles are used. */
 	__collect(): void;
+
+	/** Pins the object pointed to by ptr externally so it and its directly reachable members and indirectly reachable objects do not become garbage collected.*/
+
+	/** Unpins the object pointed to by ptr externally so it can become garbage collected. */
+
   }
 
 
@@ -139,4 +163,10 @@ export interface WascInterface {
 	* @public
 	*/
 	run: (func: (params: WascBasic & {params:any}) => void, ...params) => Promise<any>;
+
+	/**
+	 * shared module memory if available
+	 * @public
+	 */
+	memoryBuffer?: SharedArrayBuffer;
 }
