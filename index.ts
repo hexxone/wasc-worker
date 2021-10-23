@@ -154,7 +154,7 @@ function loadWorker(source: string, memSize: number, options?: any): Promise<Was
 		const memOpts = {
 			initial: memSize,
 			maximum: memSize,
-			shared,
+			shared: shared,
 		};
 		const memory = shared ? new WebAssembly.Memory(memOpts) : memOpts;
 
@@ -230,7 +230,7 @@ function loadWorker(source: string, memSize: number, options?: any): Promise<Was
 			action: WascUtil.ACTIONS.COMPILE_MODULE,
 			payload: source,
 			getImportObject: options,
-			memory,
+			memory: shared ? (memory as WebAssembly.Memory).buffer : memory,
 		});
 	});
 }
