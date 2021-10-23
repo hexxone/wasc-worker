@@ -1,7 +1,10 @@
 {
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {
-    "assemblyscript": "^0.17.7"
+  "scripts": {
+    "docs": "jsdoc -c jsdoc.json"
+  },
+  "dependencies": {
+    "assemblyscript": "^0.19.18",
+    "better-docs": "^2.3.2",
+    "typescript": "^4.4.4"
   }
 }
