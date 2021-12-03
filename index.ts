@@ -103,7 +103,7 @@ function loadInline(path: string, memSize: number, options?: any): Promise<WascI
 
 		// get & make module
 		const byteModule = await WascUtil.myFetch(path);
-		const inst = new WascLoader().instantiateSync(byteModule, myImports);
+		const inst = await new WascLoader().instantiate(byteModule, myImports);
 
 		/**
 		* Run a function inside the worker.
