@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const asc = require('assemblyscript/bin/asc');
+const asc = require('assemblyscript/cli/asc');
 const validate = require('schema-utils');
 const {RawSource} = require('webpack-sources');
 const {Compilation} = require('webpack');
@@ -99,7 +99,7 @@ class WascBuilderPlugin {
 
 						this.compileWasm(rPath + sFile, newName, this.options.production)
 							.then(async ({normal, map}) => {
-							// emit files into compilation
+								// emit files into compilation
 								if (normal) await compilation.emitAsset(newName, new RawSource(normal));
 								if (map) await compilation.emitAsset(newName + '.map', new RawSource(map));
 
@@ -159,8 +159,14 @@ class WascBuilderPlugin {
 					inputPath,
 					'--extension', this.options.extension,
 					'--binaryFile', newOut,
+					'--textFile', newOut + '.wat',
 					'--measure',
-					'--runtime', 'full',
+					'--runtime', 'incremental',
+					'--exportRuntime',
+					'--maximumMemory', '4096', // @todo: make this dynamic
+					'--sharedMemory',
+					'--importMemory',
+					'--enable', 'threads',
 					production ? '--optimize' : '--sourceMap',
 				], (err) => {
 					// let output = execSync('npm run asbuild', { cwd: __dirname });

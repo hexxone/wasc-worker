@@ -20,59 +20,68 @@ const wascw: Worker = self as any;
 /** For shared workers:
 * Cross-Origin-Opener-Policy: same-origin
 * Cross-Origin-Embedder-Policy: require-corp
+* @public
 */
 let ascImports: WebAssembly.Imports;
+
 let ascInstance: WebAssembly.Instance;
 let ascModule: WebAssembly.Module;
 let ascExports: any;
 
-/**
-* @public
-*/
-const staticImports = {
-	env: {
-		logf(value) {
-			console.log('F64: ' + value);
-		},
-		logi(value) {
-			console.log('U32: ' + value);
-		},
-	},
-};
 
 wascw.addEventListener('message', (e) => {
-	const {id, action, payload, getImportObject, memory} = e.data;
+	// console.log('wasc-message', e.data);
+
+	const {id, action, payload, getImportObject, memOpts} = e.data;
 
 	/**
 	* @param {number} result worker success = 0 | error = 1
-	* @param {Object} payload worker result | error msg
+	* @param {Object} data worker result | error msg
 	* @public
 	*/
-	const sendMessage = (result: number, payload: any) => {
+	const sendMessage = (result: number, data: any) => {
 		wascw.postMessage({
 			id,
 			action,
 			result,
-			payload,
-		}, WascUtil.getTransferableParams(payload));
+			payload: data,
+		}, WascUtil.getTransferableParams(data));
 	};
 
 	const onError = (ex) => sendMessage(1, ex);
 	const onSuccess = (res) => sendMessage(0, res);
 
-	if (action === WascUtil.ACTIONS.COMPILE_MODULE) {
-		// get & compile the module, then export functions
+	const {source, func, params} = payload;
+
+	switch (action) {
+	// get & compile the module, then export functions
+	case WascUtil.ACTIONS.COMPILE_MODULE:
 		Promise.resolve()
 			.then(async () => {
-				// assume we get the memory passed to the worker
-				ascImports = Object.assign({env: {memory}}, staticImports);
+				// use shared memory, or create our own
+				const memory = new WebAssembly.Memory(memOpts);
+				/**
+				 * @public
+				 */
+				ascImports = {
+					env: {
+						memory,
+						logf(value) {
+							console.log('F64: ' + value);
+						},
+						logi(value) {
+							console.log('U32: ' + value);
+						},
+					},
+				};
+
 				// apply additional import object
 				if (getImportObject instanceof Object) {
 					ascImports = Object.assign(ascImports, getImportObject);
 				}
 
 				// make webassembly
-				const byteModule = await WascUtil.myFetch(payload);
+				const byteModule = await WascUtil.myFetch(source);
 				const inst = new WascLoader().instantiateSync(byteModule, ascImports);
 
 				// remembr module
@@ -80,30 +89,34 @@ wascw.addEventListener('message', (e) => {
 				ascInstance = inst.instance;
 				ascExports = inst.exports;
 
-
 				/**
 				* return available methods as strings to main ctx
 				* @public
 				*/
 				onSuccess({
 					exports: Object.keys(ascExports),
+					sharedMemory: memOpts.shared ? memory : null,
 				});
 			})
 			.catch(onError);
-	} else if (action === WascUtil.ACTIONS.CALL_FUNCTION_EXPORT) {
-		// run an exported function with parameters
-		const {func, params} = payload;
+		break;
+
+	// run an exported function with parameters
+	case WascUtil.ACTIONS.CALL_FUNCTION_EXPORT:
 		// eslint-disable-next-line prefer-spread
-		Promise.resolve().then(() => onSuccess(ascExports[func].apply(ascExports, params))).catch(onError);
-	} else if (action === WascUtil.ACTIONS.RUN_FUNCTION) {
-		// run a custom function with parameters
-		const {func, params} = payload;
+		Promise.resolve()
+			.then(() => onSuccess(ascExports[func].apply(ascExports, params)))
+			.catch(onError);
+		break;
+
+	// run a custom function with parameters
+	case WascUtil.ACTIONS.RUN_FUNCTION:
 		Promise.resolve()
 			.then(() => {
 				const fun = new Function(`return ${func}`)();
 				/**
-			* @public
-			*/
+				* @public
+				*/
 				onSuccess(fun({
 					module: ascModule,
 					instance: ascInstance,
@@ -112,6 +125,12 @@ wascw.addEventListener('message', (e) => {
 				}));
 			})
 			.catch(onError);
+		break;
+
+	// protocol error
+	default:
+		console.error('[wasc-worker] Unknown action: ' + action);
+		break;
 	}
 });
 

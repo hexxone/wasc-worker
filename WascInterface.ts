@@ -168,5 +168,5 @@ export interface WascInterface {
 	 * shared module memory if available
 	 * @public
 	 */
-	memoryBuffer?: SharedArrayBuffer;
+	sharedMemory?: WebAssembly.Memory;
 }

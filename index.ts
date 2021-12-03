@@ -9,13 +9,10 @@
 *
 */
 
-import {WascLoader} from './WascLoader';
+import {Smallog, WascLoader, WascInterface, WascUtil} from '../';
+
 import WascWorker from 'worker-loader!./Wasc';
 
-import {Smallog} from '../Smallog';
-
-import {WascInterface} from './WascInterface';
-import {WascUtil} from './WascUtil';
 
 const LOGHEAD = '[WASC] ';
 const NO_SUPP = '>>> WebAssembly failed! Initialization cannot continue. <<<';
@@ -48,7 +45,7 @@ export function wascWorker(source: string, memSize: number = 4096, options: any 
 			return;
 		}
 		// decide whether to use worker-threading or inline embedding.
-		const hasWrk = typeof(Worker) !== 'undefined';
+		const hasWrk = typeof (Worker) !== 'undefined';
 		if (useWorker && !hasWrk) Smallog.error('WebWorkers are not supported? Using inline loading as fallback...');
 		const loadWrk = (useWorker && hasWrk);
 		Smallog.debug(`Loading ${source} as ${loadWrk ? 'worker' : 'inline'} with data=${JSON.stringify(options)}`, LOGHEAD);
@@ -71,21 +68,26 @@ export function wascWorker(source: string, memSize: number = 4096, options: any 
 * Basically the normal WebAssembly usage,
 * just with api- and "run()"-compatibility
 * @param {string} path compiled module path
-* @param {number} memSize initial memory pages
+* @param {number} memSize initial memory pages *(64KiB)
 * @param {Object} options import Objects
 * @return {Promise<WascInterface>} module
 * @public
 */
 function loadInline(path: string, memSize: number, options?: any): Promise<WascInterface> {
 	return new Promise(async (resolve) => {
-		const shared = window['crossOriginIsolated'] === true;
+		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer/Planned_changes
+		const coid = window['crossOriginIsolated'] === true;
 		const memory = new WebAssembly.Memory({
 			initial: memSize,
 			maximum: memSize,
-			shared,
-		} as any);
+			shared: coid,
+		});
 
-		const staticImports = {
+		/**
+		 * gather imports
+		 * @public
+		 */
+		let myImports = {
 			env: {
 				memory,
 				logf(value) {
@@ -96,14 +98,10 @@ function loadInline(path: string, memSize: number, options?: any): Promise<WascI
 				},
 			},
 		};
-
-		// get import object
 		const {getImportObject} = options;
-		let myImports = Object.assign({}, staticImports);
-		if (getImportObject) {
-			myImports = Object.assign(myImports, getImportObject);
-		}
+		if (getImportObject) myImports = Object.assign(myImports, getImportObject);
 
+		// get & make module
 		const byteModule = await WascUtil.myFetch(path);
 		const inst = new WascLoader().instantiateSync(byteModule, myImports);
 
@@ -128,7 +126,7 @@ function loadInline(path: string, memSize: number, options?: any): Promise<WascI
 
 		// we done here
 		resolve({
-			memoryBuffer: shared ? memory.buffer as SharedArrayBuffer : null,
+			sharedMemory: coid ? memory : null,
 			exports: inst.exports,
 			run,
 		});
@@ -150,13 +148,12 @@ function loadInline(path: string, memSize: number, options?: any): Promise<WascI
 function loadWorker(source: string, memSize: number, options?: any): Promise<WascInterface> {
 	return new Promise((...reslv) => {
 		// create shared memory?
-		const shared = window['crossOriginIsolated'] === true;
+		const coid = window['crossOriginIsolated'] === true;
 		const memOpts = {
 			initial: memSize,
 			maximum: memSize,
-			shared: shared,
+			shared: coid,
 		};
-		const memory = shared ? new WebAssembly.Memory(memOpts) : memOpts;
 
 		// WRAP IN WORKER
 		let promCnt = 0;
@@ -165,17 +162,19 @@ function loadWorker(source: string, memSize: number, options?: any): Promise<Was
 		const worker = new WascWorker();
 
 		worker.onmessage = (e) => {
+			// console.log('main-message', e.data);
+
 			const {id, result, action, payload} = e.data;
 
 			if (action === WascUtil.ACTIONS.COMPILE_MODULE) {
 				// COMPILE MODULE & RESOLVE EXPORTS
 				if (result === 0) {
 					// SUCCESS
-					const {exports} = payload;
+					const {exports, sharedMemory} = payload;
 
 					promises[id][0]({
 						// module memory
-						memoryBuffer: shared ? (memory as WebAssembly.Memory).buffer : null,
+						sharedMemory,
 
 						// wrap the returned context/thread exports into postMessage-promises
 						exports: exports.reduce((acc, exp) => ({
@@ -228,9 +227,9 @@ function loadWorker(source: string, memSize: number, options?: any): Promise<Was
 		worker.postMessage({
 			id: promCnt,
 			action: WascUtil.ACTIONS.COMPILE_MODULE,
-			payload: source,
+			payload: {source},
 			getImportObject: options,
-			memory: shared ? (memory as WebAssembly.Memory).buffer : memory,
+			memOpts,
 		});
 	});
 }
@@ -238,3 +237,4 @@ function loadWorker(source: string, memSize: number, options?: any): Promise<Was
 
 export * from './WascInterface';
 export * from './WascUtil';
+export * from './WascLoader';

@@ -1,5 +1,6 @@
 
 import {Module} from 'assemblyscript';
+import {AnyTypedArray} from '../';
 import {ASUtil, WascBasic} from './WascInterface';
 
 /**
@@ -7,36 +8,36 @@ import {ASUtil, WascBasic} from './WascInterface';
 */
 export class WascLoader {
 	// Runtime header offsets
-	ID_OFFSET = -8;
-	SIZE_OFFSET = -4;
+	private ID_OFFSET = -8;
+	private SIZE_OFFSET = -4;
 
 	// Runtime ids
-	ARRAYBUFFER_ID = 0;
-	STRING_ID = 1;
+	private ARRAYBUFFER_ID = 0;
+	private STRING_ID = 1;
 
 	// Runtime type information
-	ARRAYBUFFERVIEW = 1 << 0;
-	ARRAY = 1 << 1;
-	STATICARRAY = 1 << 2;
-	VAL_ALIGN_OFFSET = 6;
-	VAL_SIGNED = 1 << 11;
-	VAL_FLOAT = 1 << 12;
-	VAL_MANAGED = 1 << 14;
+	private ARRAYBUFFERVIEW = 1 << 0;
+	private ARRAY = 1 << 1;
+	private STATICARRAY = 1 << 2;
+	private VAL_ALIGN_OFFSET = 6;
+	private VAL_SIGNED = 1 << 11;
+	private VAL_FLOAT = 1 << 12;
+	private VAL_MANAGED = 1 << 14;
 
 	// Array(BufferView) layout
-	ARRAYBUFFERVIEW_BUFFER_OFFSET = 0;
-	ARRAYBUFFERVIEW_DATASTART_OFFSET = 4;
-	ARRAYBUFFERVIEW_DATALENGTH_OFFSET = 8;
-	ARRAYBUFFERVIEW_SIZE = 12;
-	ARRAY_LENGTH_OFFSET = 12;
-	ARRAY_SIZE = 16;
+	private ARRAYBUFFERVIEW_BUFFER_OFFSET = 0;
+	private ARRAYBUFFERVIEW_DATASTART_OFFSET = 4;
+	private ARRAYBUFFERVIEW_DATALENGTH_OFFSET = 8;
+	private ARRAYBUFFERVIEW_SIZE = 12;
+	private ARRAY_LENGTH_OFFSET = 12;
+	private ARRAY_SIZE = 16;
 
-	_THIS = Symbol();
+	private _THIS = Symbol();
 
-	STRING_DECODE_THRESHOLD = 32;
-	decoder = new TextDecoder('utf-16le');
+	private STRING_DECODE_THRESHOLD = 32;
+	private decoder = new TextDecoder('utf-16le');
 
-	E_NOEXPORTRUNTIME = 'Operation requires compiling with --exportRuntime';
+	private E_NOEXPORTRUNTIME = 'Operation requires compiling with --exportRuntime';
 
 	/**
 	* Handle missing runtimme error
@@ -66,6 +67,8 @@ export class WascLoader {
 	* @return {Object}
 	*/
 	private preInstantiate(imports: any): object {
+		// console.log('[WascLoader] preInstantiate', imports);
+
 		const extendedExports: WebAssembly.Exports = {};
 
 		const getString = (memory: WebAssembly.Memory, ptr: number) => {
@@ -98,8 +101,9 @@ export class WascLoader {
 	* @param {any} extendedExports
 	* @param {WebAssembly.Instance} instance
 	* @return {ASUtil}
+	* @public
 	*/
-	private postInstantiate(extendedExports: any, instance: WebAssembly.Instance): ASUtil {
+	public postInstantiate(extendedExports: any, instance: WebAssembly.Instance): ASUtil {
 		const exports = instance.exports;
 
 		const memory = exports.memory as WebAssembly.Memory;
@@ -172,7 +176,7 @@ export class WascLoader {
 		* @param {number} float
 		* @return {Uint32Array | Float32Array | Float64Array | Uint8Array | Int8Array | Uint16Array | Int16Array | Int32Array | BigUint64Array | BigInt64Array}
 		*/
-		const getView = (alignLog2: number, signed: number, float: number): Uint32Array | Float32Array | Float64Array | Uint8Array | Int8Array | Uint16Array | Int16Array | Int32Array | BigUint64Array | BigInt64Array => {
+		const getView = (alignLog2: number, signed: number, float: number): typeof AnyTypedArray => {
 			const buffer = memory.buffer;
 			if (float) {
 				switch (alignLog2) {
@@ -449,7 +453,7 @@ export class WascLoader {
 						((curr[name] = function(...args) { // !
 							setArgumentsLength(args.length);
 							return elem(this[this._THIS], ...args);
-						}) as any ).original = elem;
+						}) as any).original = elem;
 					}
 				}
 			} else {
