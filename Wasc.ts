@@ -44,7 +44,7 @@ wascw.addEventListener('message', (e) => {
 			id,
 			action,
 			result,
-			payload: data,
+			"payload": data,
 		}, WascUtil.getTransferableParams(data));
 	};
 
@@ -64,12 +64,12 @@ wascw.addEventListener('message', (e) => {
 				 * @public
 				 */
 				ascImports = {
-					env: {
+					"env": {
 						memory,
-						logf(value) {
+						"logf": (value) => {
 							console.log('F64: ' + value);
 						},
-						logi(value) {
+						"logi": (value) => {
 							console.log('U32: ' + value);
 						},
 					},
@@ -94,8 +94,8 @@ wascw.addEventListener('message', (e) => {
 				* @public
 				*/
 				onSuccess({
-					exports: Object.keys(ascExports),
-					sharedMemory: memOpts.shared ? memory : null,
+					"exports": Object.keys(ascExports),
+					"sharedMemory": memOpts.shared ? memory : null,
 				});
 			})
 			.catch(onError);
@@ -118,9 +118,9 @@ wascw.addEventListener('message', (e) => {
 				* @public
 				*/
 				onSuccess(fun({
-					module: ascModule,
-					instance: ascInstance,
-					exports: ascExports,
+					"module": ascModule,
+					"instance": ascInstance,
+					"exports": ascExports,
 					params,
 				}));
 			})
@@ -129,7 +129,7 @@ wascw.addEventListener('message', (e) => {
 
 	// protocol error
 	default:
-		console.error('[wasc-worker] Unknown action: ' + action);
+		console.error('[wasc-worker] Unknown action: ' + JSON.stringify(e.data));
 		break;
 	}
 });

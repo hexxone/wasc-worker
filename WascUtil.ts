@@ -12,9 +12,7 @@
 
 /**
 * Worker <-> Maincontext communication
-* @public
 */
-/* eslint-disable no-unused-vars */
 enum ACTIONS {
 	COMPILE_MODULE = 0,
 	CALL_FUNCTION_EXPORT = 1,
@@ -44,7 +42,7 @@ function getTransferableParams(...params: any): any {
 * @param {string} owMime force-override mime-type (optional)
 * @return {Object} XMLHttpRequest.response (converted to resType)
 */
-function myFetch(path: string, resType: string = 'arraybuffer', owMime?: string): Promise<any> {
+function myFetch(path: string, resType = 'arraybuffer', owMime?: string): Promise<any> {
 	return new Promise((res) => {
 		const request = new XMLHttpRequest();
 		request.open('GET', path);
