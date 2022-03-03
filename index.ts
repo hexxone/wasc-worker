@@ -20,14 +20,14 @@ const wasmSupport = (() => {
 	try {
 		if (
 			typeof WebAssembly === "object" &&
-            typeof WebAssembly.instantiate === "function"
+			typeof WebAssembly.instantiate === "function"
 		) {
 			const module = new WebAssembly.Module(
 				Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00)
 			);
 			return (
 				module instanceof WebAssembly.Module &&
-                new WebAssembly.Instance(module) instanceof WebAssembly.Instance
+				new WebAssembly.Instance(module) instanceof WebAssembly.Instance
 			);
 		}
 	} catch (e) {
@@ -112,9 +112,9 @@ function loadInline(
 		});
 
 		/**
-         * gather imports
-         * @public
-         */
+		 * gather imports
+		 * @public
+		 */
 		let myImports = {
 			env: {
 				memory,
@@ -128,20 +128,19 @@ function loadInline(
 		};
 
 		const { getImportObject } = options;
-		if (getImportObject)
-			myImports = Object.assign(myImports, getImportObject);
+		if (getImportObject) myImports = Object.assign(myImports, getImportObject);
 
 		// get & make module
 		return WascUtil.myFetch(path)
 			.then((res) => new WascLoader().instantiate(res, myImports))
 			.then((inst) => {
 				/**
-                 * Run a function inside the worker.
-                 * @warning This is potentially dangerous due to eval!
-                 * @param {string} func stringified function to eval inside worker context
-                 * @param {Object} params Data to pass in
-                 * @return {Object} eval result
-                 */
+				 * Run a function inside the worker.
+				 * @warning This is potentially dangerous due to eval!
+				 * @param {string} func stringified function to eval inside worker context
+				 * @param {Object} params Data to pass in
+				 * @return {Object} eval result
+				 */
 				const run = (func, ...params) => {
 					return new Promise((res_) => {
 						const fun_ = new Function(`return ${func}`)();
@@ -158,7 +157,11 @@ function loadInline(
 
 				// we done here
 				resolve({
-					sharedMemory: shared ? memory : null,
+					shared: shared
+						? new WascLoader().postInstantiate({}, {
+								exports: { memory: memory },
+						  } as any)
+						: null,
 					exports: inst.exports,
 					run,
 				});
@@ -186,7 +189,6 @@ function loadWorker(
 ): Promise<WascInterface> {
 	return new Promise((...reslv) => {
 		// create shared memory?
-		const coid = window["crossOriginIsolated"] === true;
 		const memOpts = {
 			initial: memSize,
 			maximum: memSize,
@@ -223,10 +225,10 @@ function loadWorker(
 										promises[++promCnt] = rest;
 										worker.postMessage(
 											{
-												"id": promCnt,
-												"action": WascUtil.ACTIONS.CALL_FUNCTION_EXPORT,
-												"payload": {
-													"func": exp,
+												id: promCnt,
+												action: WascUtil.ACTIONS.CALL_FUNCTION_EXPORT,
+												payload: {
+													func: exp,
 													params,
 												},
 											},
@@ -243,10 +245,10 @@ function loadWorker(
 								promises[++promCnt] = rest;
 								worker.postMessage(
 									{
-										"id": promCnt,
-										"action": WascUtil.ACTIONS.RUN_FUNCTION,
-										"payload": {
-											"func": func.toString(),
+										id: promCnt,
+										action: WascUtil.ACTIONS.RUN_FUNCTION,
+										payload: {
+											func: func.toString(),
 											params,
 										},
 									},
@@ -262,7 +264,7 @@ function loadWorker(
 				// CALL FUNCTION
 			} else if (
 				action === WascUtil.ACTIONS.CALL_FUNCTION_EXPORT ||
-                action === WascUtil.ACTIONS.RUN_FUNCTION
+				action === WascUtil.ACTIONS.RUN_FUNCTION
 			) {
 				promises[id][result](payload);
 			}
@@ -273,11 +275,11 @@ function loadWorker(
 		promises[++promCnt] = reslv;
 
 		worker.postMessage({
-			"id": promCnt,
-			"action": WascUtil.ACTIONS.COMPILE_MODULE,
-			"payload": { source },
-			"getImportObject": options,
-			"memOpts": memOpts,
+			id: promCnt,
+			action: WascUtil.ACTIONS.COMPILE_MODULE,
+			payload: { source },
+			getImportObject: options,
+			memOpts: memOpts,
 		});
 	});
 }

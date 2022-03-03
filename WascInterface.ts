@@ -1,12 +1,11 @@
 /**
-* @author hexxone / https://hexx.one
-*
-* @license
-* Copyright (c) 2021 hexxone All rights reserved.
-* Licensed under the GNU GENERAL PUBLIC LICENSE.
-* See LICENSE file in the project root for full license information.
-*/
-
+ * @author hexxone / https://hexx.one
+ *
+ * @license
+ * Copyright (c) 2021 hexxone All rights reserved.
+ * Licensed under the GNU GENERAL PUBLIC LICENSE.
+ * See LICENSE file in the project root for full license information.
+ */
 
 /**
  * Utility mixed in by the loader.
@@ -16,7 +15,7 @@
  * @see https://www.assemblyscript.org/loader.html#module-instance-runtime-interface
  * @public
  */
-export interface ASUtil {
+export type ASUtil = {
 	memory?: WebAssembly.Memory;
 	table?: WebAssembly.Table;
 
@@ -54,7 +53,19 @@ export interface ASUtil {
 	__getFloat64Array(ptr: number): Float64Array;
 
 	/** Gets a live view on an array's values in the module's memory. Infers the array type from RTTI. */
-	__getArrayView(ptr: number): Uint32Array | Float32Array | Float64Array | Uint8Array | Int8Array | Uint16Array | Int16Array | Int32Array | BigUint64Array | BigInt64Array;
+	__getArrayView(
+		ptr: number
+	):
+		| Uint32Array
+		| Float32Array
+		| Float64Array
+		| Uint8Array
+		| Int8Array
+		| Uint16Array
+		| Int16Array
+		| Int32Array
+		| BigUint64Array
+		| BigInt64Array;
 	/** Gets a live view on an Int8Array's values in the module's memory. */
 	__getInt8ArrayView(ptr: number): Int8Array;
 	/** Gets a live view on an Uint8Array's values in the module's memory. */
@@ -113,60 +124,61 @@ export interface ASUtil {
 	/** Pins the object pointed to by ptr externally so it and its directly reachable members and indirectly reachable objects do not become garbage collected.*/
 
 	/** Unpins the object pointed to by ptr externally so it can become garbage collected. */
-
-  }
-
+};
 
 /**
-* parameters for the inline run-function
-* @see {WascInterface}
-* @public
-*/
-export interface WascBasic {
+ * parameters for the inline run-function
+ * @see {WascInterface}
+ * @public
+ */
+export type WascBasic = {
 	/**
-	* loaded WebAssembly.Module
-	* @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Module
-	* @public
-	*/
+	 * loaded WebAssembly.Module
+	 * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Module
+	 * @public
+	 */
 	module: WebAssembly.Module;
 
 	/**
-	* loaded WebAssembly.Instance
-	* @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Instance
-	* @public
-	*/
+	 * loaded WebAssembly.Instance
+	 * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Instance
+	 * @public
+	 */
 	instance: WebAssembly.Instance;
 
 	/**
-	* injected assemblyscript utility functions
-	* @see {ASUtil}
-	* @public
-	*/
+	 * injected assemblyscript utility functions
+	 * @see {ASUtil}
+	 * @public
+	 */
 	exports: ASUtil;
-}
+};
 
 /**
-* shared interface for loading a module
-* @see {WascLoader}
-* @public
-*/
-export interface WascInterface {
+ * shared interface for loading a module
+ * @see {WascLoader}
+ * @public
+ */
+export type WascInterface = {
 	/**
-	* injected assemblyscript utility functions
-	* @see {ASUtil}
-	* @public
-	*/
+	 * injected assemblyscript utility functions
+	 * @see {ASUtil}
+	 * @public
+	 */
 	exports: ASUtil;
 
 	/**
-	* Worker-context run function
-	* @public
-	*/
-	run: (func: (params: WascBasic & {params:any}) => void, ...params) => Promise<any>;
+	 * Worker-context run function
+	 * @public
+	 */
+	run: (
+		func: (params: WascBasic & { params: any }) => void,
+		...params
+	) => Promise<any>;
 
 	/**
 	 * shared module memory if available
 	 * @public
 	 */
-	sharedMemory?: WebAssembly.Memory;
-}
+	shared?: ASUtil;
+};
