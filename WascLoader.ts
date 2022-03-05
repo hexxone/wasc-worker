@@ -1,5 +1,5 @@
 import { Module } from "assemblyscript";
-import { AnyTypedArray } from "../";
+import { WascUtil } from "..";
 import { ASUtil, WascBasic } from "./WascInterface";
 
 /**
@@ -198,7 +198,7 @@ export class WascLoader {
 			alignLog2: number,
 			signed: number,
 			float: number
-		): typeof AnyTypedArray => {
+		): typeof WascUtil.AnyTypedArray => {
 			const buffer = memory.buffer;
 			if (float) {
 				switch (alignLog2) {
