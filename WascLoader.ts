@@ -1,6 +1,6 @@
 import { Module } from "assemblyscript";
-import { WascUtil } from "..";
-import { ASUtil, WascBasic } from "./WascInterface";
+
+import { WascUtil, ASUtil, WascBasic } from "..";
 
 /**
  * Customized TypeScript AssemblyScript loader

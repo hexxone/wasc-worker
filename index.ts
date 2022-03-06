@@ -9,7 +9,7 @@
  *
  */
 
-import { Smallog, WascLoader, WascInterface, WascUtil } from "../";
+import { Smallog, WascLoader, WascInterface, WascUtil } from "..";
 
 import WascWorker from "worker-loader!./Wasc";
 
