@@ -9,12 +9,15 @@
  *
  */
 
-import { Smallog, WascLoader, WascInterface, WascUtil } from "..";
-
-import WascWorker from "worker-loader!./Wasc";
+import { Smallog } from "..";
+import { WascLoader, WascInterface, WascUtil } from ".";
 
 const LOGHEAD = "[WASC] ";
 const NO_SUPP = ">>> WebAssembly failed! Initialization cannot continue. <<<";
+
+// import WascWorker from "worker-loader!./Wasc.worker";
+
+const WascWorker = () => new Worker(new URL("./Wasc.worker.js", import.meta.url));
 
 const wasmSupport = (() => {
 	try {
@@ -66,8 +69,7 @@ export function wascWorker(
 			);
 		const loadWrk = useWorker && hasWrk;
 		Smallog.debug(
-			`Loading ${source} as ${
-				loadWrk ? "worker" : "inline"
+			`Loading ${source} as ${loadWrk ? "worker" : "inline"
 			} with data=${JSON.stringify(options)}`,
 			LOGHEAD
 		);
@@ -159,8 +161,8 @@ function loadInline(
 				resolve({
 					shared: shared
 						? new WascLoader().postInstantiate({}, {
-								exports: { memory: memory },
-						  } as any)
+							exports: { memory: memory },
+						} as any)
 						: null,
 					exports: inst.exports,
 					run,
@@ -199,7 +201,7 @@ function loadWorker(
 		let promCnt = 0;
 		const promises = {};
 
-		const worker = new WascWorker();
+		const worker = WascWorker();
 
 		worker.onmessage = (e) => {
 			// console.log('main-message', e.data);

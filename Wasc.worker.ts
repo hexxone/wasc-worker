@@ -12,9 +12,9 @@
 
 "use strict";
 
-import { WascLoader, WascUtil } from "..";
+import { WascLoader, WascUtil } from ".";
 
-const wascw: Worker = self as any;
+const wascw = self as any;
 
 /** For shared workers:
  * Cross-Origin-Opener-Policy: same-origin
