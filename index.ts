@@ -9,8 +9,11 @@
  *
  */
 
-import { Smallog } from "..";
-import { WascLoader, WascInterface, WascUtil } from ".";
+import { Smallog } from "../Smallog";
+import { WascInterface } from "./WascInterface";
+import { WascLoader } from "./WascLoader";
+import { WascUtil } from "./WascUtil";
+
 
 const LOGHEAD = "[WASC] ";
 const NO_SUPP = ">>> WebAssembly failed! Initialization cannot continue. <<<";

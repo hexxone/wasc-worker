@@ -12,7 +12,9 @@
 
 "use strict";
 
-import { WascLoader, WascUtil } from ".";
+import { WascLoader } from "./WascLoader";
+import { WascUtil } from "./WascUtil";
+
 
 const wascw = self as any;
 
