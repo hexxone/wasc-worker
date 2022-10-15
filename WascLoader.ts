@@ -198,7 +198,7 @@ export class WascLoader {
 			alignLog2: number,
 			signed: number,
 			float: number
-		): typeof WascUtil.AnyTypedArray => {
+		): AnyTypedArray => {
 			const buffer = memory.buffer;
 			if (float) {
 				switch (alignLog2) {

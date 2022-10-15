@@ -19,22 +19,6 @@ enum ACTIONS {
 }
 
 /**
- * Shorthand for Typed array stuff
- * @public
- */
-const AnyTypedArray:
-	| Uint32Array
-	| Float32Array
-	| Float64Array
-	| Uint8Array
-	| Int8Array
-	| Uint16Array
-	| Int16Array
-	| Int32Array
-	| BigUint64Array
-	| BigInt64Array = null;
-
-/**
  * Filter out transferrable parameters for passing into WebWorkers
  * @public
  * @param {Object} params The given Items to filter
@@ -79,7 +63,6 @@ function myFetch(
 
 export const WascUtil = {
 	ACTIONS,
-	AnyTypedArray,
 	getTransferableParams,
 	myFetch,
 };
