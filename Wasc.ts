@@ -14,7 +14,6 @@ import { WascInterface } from "./WascInterface";
 import { WascLoader } from "./WascLoader";
 import { WascUtil } from "./WascUtil";
 
-
 const LOGHEAD = "[WASC] ";
 const NO_SUPP = ">>> WebAssembly failed! Initialization cannot continue. <<<";
 
@@ -71,7 +70,8 @@ export function wascWorker(
 			);
 		const loadWrk = useWorker && hasWrk;
 		Smallog.debug(
-			`Loading ${source} as ${loadWrk ? "worker" : "inline"
+			`Loading ${source} as ${
+				loadWrk ? "worker" : "inline"
 			} with data=${JSON.stringify(options)}`,
 			LOGHEAD
 		);
@@ -163,8 +163,8 @@ function loadInline(
 				resolve({
 					shared: shared
 						? new WascLoader().postInstantiate({}, {
-							exports: { memory: memory },
-						} as any)
+								exports: { memory: memory },
+						  } as any)
 						: null,
 					exports: inst.exports,
 					run,
