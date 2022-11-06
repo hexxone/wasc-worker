@@ -36,6 +36,7 @@ wascw.addEventListener("message", (e) => {
 	/**
 	 * @param {number} result worker success = 0 | error = 1
 	 * @param {Object} data worker result | error msg
+	 * @returns {void}
 	 * @public
 	 */
 	const sendMessage = (result: number, data: any) => {
@@ -108,8 +109,8 @@ wascw.addEventListener("message", (e) => {
 
 		// run an exported function with parameters
 		case WascUtil.ACTIONS.CALL_FUNCTION_EXPORT:
-			// eslint-disable-next-line prefer-spread
 			Promise.resolve()
+				// eslint-disable-next-line prefer-spread
 				.then(() => onSuccess(ascExports[func].apply(ascExports, params)))
 				.catch(onError);
 			break;
