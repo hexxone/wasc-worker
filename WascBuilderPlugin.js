@@ -2,7 +2,7 @@
  * @author hexxone / https://hexx.one
  *
  * @license
- * Copyright (c) 2022 hexxone All rights reserved.
+ * Copyright (c) 2023 hexxone All rights reserved.
  * Licensed under the GNU GENERAL PUBLIC LICENSE.
  * See LICENSE file in the project root for full license information.
  * @ignore
@@ -93,31 +93,19 @@ class WascBuilderPlugin {
 							return new Promise(async (resolve) => {
 								// only compile if wasm name match regex
 								const sName = sFile.replace(/^.*[\\\/]/, "");
-								if (
-									!sName.endsWith(
-										"." + this.options.extension
-									)
-								) {
+								if (!sName.endsWith("." + this.options.extension)) {
 									resolve(false);
 									return;
 								}
 
 								// change new file ext to ".wasm"
 								let newName = sName.replace(/\.[^/.]+$/, "");
-								if (!newName.endsWith(".wasm"))
-									newName += ".wasm";
+								if (!newName.endsWith(".wasm")) newName += ".wasm";
 
-								await this.doCompile(
-									rPath + sFile,
-									newName,
-									compilation
-								);
+								await this.doCompile(rPath + sFile, newName, compilation);
 
 								if (this.options.shared === true) {
-									let shName = newName.replace(
-										".wasm",
-										".shared.wasm"
-									);
+									let shName = newName.replace(".wasm", ".shared.wasm");
 									await this.doCompile(
 										rPath + sFile,
 										shName,
@@ -176,16 +164,9 @@ class WascBuilderPlugin {
 			this.compileWasm(src, trgt, this.options.production, shared).then(
 				async ({ normal, map }) => {
 					// emit files into compilation
-					if (normal)
-						await compilation.emitAsset(
-							trgt,
-							new RawSource(normal)
-						);
+					if (normal) await compilation.emitAsset(trgt, new RawSource(normal));
 					if (map)
-						await compilation.emitAsset(
-							trgt + ".map",
-							new RawSource(map)
-						);
+						await compilation.emitAsset(trgt + ".map", new RawSource(map));
 
 					console.info("[" + pluginName + "] Success: " + trgt);
 					resolve();
@@ -209,9 +190,7 @@ class WascBuilderPlugin {
 			try {
 				inputPath = inputPath.replaceAll("\\", "/");
 
-				const newOut = path
-					.resolve(outPath, newName)
-					.replaceAll("\\", "/");
+				const newOut = path.resolve(outPath, newName).replaceAll("\\", "/");
 
 				const compileParams = [
 					inputPath,
@@ -234,9 +213,7 @@ class WascBuilderPlugin {
 					production ? "-Ospeed" : "--sourceMap",
 				].filter((e) => e != "");
 
-				console.info(
-					`[${pluginName}] Compile ${compileParams.join(" ")}`
-				);
+				console.info(`[${pluginName}] Compile ${compileParams.join(" ")}`);
 
 				asc.main(compileParams, (err) => {
 					// let output = execSync('npm run asbuild', { cwd: __dirname });
@@ -274,9 +251,7 @@ class WascBuilderPlugin {
 						return new Promise((res) => {
 							fs.unlink(path.join(outPath, file), (err) => {
 								if (err) throw err;
-								console.info(
-									"[" + pluginName + "] delete: " + file
-								);
+								console.info("[" + pluginName + "] delete: " + file);
 								res();
 							});
 						});
