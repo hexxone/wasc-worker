@@ -70,8 +70,7 @@ export function wascWorker(
 			);
 		const loadWrk = useWorker && hasWrk;
 		Smallog.debug(
-			`Loading ${source} as ${
-				loadWrk ? "worker" : "inline"
+			`Loading ${source} as ${loadWrk ? "worker" : "inline"
 			} with data=${JSON.stringify(options)}`,
 			LOGHEAD
 		);
@@ -163,8 +162,8 @@ function loadInline(
 				resolve({
 					shared: shared
 						? new WascLoader().postInstantiate({}, {
-								exports: { memory: memory },
-						  } as any)
+							exports: { memory: memory },
+						} as any)
 						: null,
 					exports: inst.exports,
 					run,
@@ -193,7 +192,8 @@ function loadWorker(
 ): Promise<WascInterface> {
 	return new Promise((...reslv) => {
 		// create shared memory?
-		const memOpts = {
+
+		const memOpts: WebAssembly.MemoryDescriptor = {
 			initial: memSize,
 			maximum: memSize,
 			shared,
@@ -219,6 +219,13 @@ function loadWorker(
 					promises[id][0]({
 						// module memory
 						sharedMemory,
+
+
+						shared: shared
+							? new WascLoader().postInstantiate({}, {
+								exports: { memory: sharedMemory },
+							} as any)
+							: null,
 
 						// wrap the returned context/thread exports into postMessage-promises
 						exports: exports.reduce(
