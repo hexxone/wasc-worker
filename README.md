@@ -58,9 +58,10 @@ plugins: [
     // AssemblyScript compiler
     new WascBuilderPlugin({
       production: false, // decides whether to optimize OR generate a .map file
-      relpath: '../../../', // will compile all matched files in this folder (recursive)
-      extension: 'asc', // decides which files are to be compiled
+      basedir: "../../../../assembly", // will compile all matched modules in this folder (recursive)
+      modules: ["CloudGen.asc"], // modules to compile
       cleanup: true // decides if the temp-dir is cleaned after compiling (debugging?)
+      shared: true, // additionally compile with "shared" memory flag
     }),
     ...
   ]

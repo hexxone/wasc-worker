@@ -1,4 +1,5 @@
-import { Module } from "assemblyscript";
+// import { Module } from "assemblyscript";
+import { Module } from "types:assemblyscript/src/module";
 import { ASUtil, WascBasic } from "./WascInterface";
 import { WascUtil } from "./WascUtil";
 
@@ -590,13 +591,13 @@ export class WascLoader {
 		if (this.isResponse((source = await source)))
 			return this.instantiateStreaming(source, imports);
 
-		const module: Module = this.isModule(source)
+		const myModule: Module = this.isModule(source)
 			? source
 			: await WebAssembly.compile(source);
 		const extended = this.preInstantiate(imports);
-		const instance = await WebAssembly.instantiate(module, imports);
+		const instance = await WebAssembly.instantiate(myModule, imports);
 		const exports = this.postInstantiate(extended, instance);
-		return { module, instance, exports };
+		return { module: myModule, instance, exports };
 	}
 
 	/**
