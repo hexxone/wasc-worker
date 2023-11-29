@@ -1,11 +1,12 @@
 # [wasc-worker](https://github.com/hexxone/wasc-worker)
 
 is a custom fork of:
+
 ## [wasm-worker](https://github.com/mbasso/wasm-worker)
 
-### specifically designed for AssemblyScript & TypeScript.
+### specifically designed for AssemblyScript & TypeScript
 
-#### Please see below for the original Author(s) and Copyright!
+#### Please see below for the original Author(s) and Copyright
 
 ## How to build AssemblyScript modules and use them in Workers
 
@@ -14,7 +15,6 @@ This repository includes a WebPack Plugin called "WascBuilderPlugin" for compili
 At the same time, it can be used to load and run the module in a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers). => Usage => Running
 
 Main target are browser environments.
-
 
 ## Install
 
@@ -27,8 +27,7 @@ git submodule add path/to/put/wasc-worker https://github.com/hexxone/wasc-worker
 At a later time, there might be a node-package.
 But for now everything is "experimental"..
 
-
-## Usage:
+## Usage
 
 ### 1. Compiling
 
@@ -38,6 +37,7 @@ E.g.: you cant require "utils.ts" from "index.asc".
 If this collides with your naming scheme, you will have to alter the settings in Step 2.
 
 So.. suppose you have an "add.asc" file with this content:
+
 ```asc
 
 export function add(a: i32, b: i32): i32 {
@@ -68,7 +68,9 @@ plugins: [
 ```
 
 Running your Webpack build should now also print something like this:
-```
+
+```bash
+$ yarn dbg
 [WasmPlugin] Gathering Infos....
 [WasmPlugin] Compile debug: add.asc
 I/O Read   :     0.042 ms  n=2
@@ -90,7 +92,6 @@ Transform  :          n/a  n=0
 Now you should have the "add.wasm" module in your webpack compilation folder.
 
 The WebAssembly module should export the "add"-function, "memory" and [AssemblyScript runtime](https://www.assemblyscript.org/loader.html#module-instance-utility).
-
 
 ### 2. Running
 
@@ -135,7 +136,6 @@ Almost everything has been made type-safe and should be self-explanatory.
 
 #### [Documentation](https://hexxone.github.io/we_utils/)
 
-
 ## Supported environments
 
 `wasc-worker` uses [fetch](https://developer.mozilla.org/it/docs/Web/API/Fetch_API),
@@ -147,10 +147,10 @@ There is a fallback included for Web-Workers, but you will need an up-to-date ma
 
 Node.js usage is NOT explicitly implemented & was NOT tested, so you probably have to polyfill it.
 
-
-###  Content-Security-Policy
+### Content-Security-Policy
 
 You will also need these HTTP Headers due to [Security Requirements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements) - following 'Spectre' from 2018.
+
 ```
 https: true
 Cross-Origin-Opener-Policy: same-origin
@@ -161,7 +161,6 @@ Cross-Origin-Embedder-Policy: require-corp
 
 The project is inspired by [wasm-worker](https://github.com/mbasso/wasm-worker).
 
-
 ## Original Change Log
 
 > The github Code of Conduct applies to this project.
@@ -170,15 +169,16 @@ This project adhered to [Semantic Versioning](http://semver.org/).
 
 Every old release, along with the migration instructions, is documented on the Github [Releases](https://github.com/mbasso/wasm-worker/releases) page.
 
-
 ## Authors
+
 **Matteo Basso**
+
 - [github/mbasso](https://github.com/mbasso)
 - [@teo_basso](https://twitter.com/teo_basso)
 
 **hexxone**
-- [github/hexxone](https://github.com/hexxone)
 
+- [github/hexxone](https://github.com/hexxone)
 
 ## Copyright and License
 
