@@ -22,7 +22,7 @@ enum ACTIONS {
  * Filter out transferrable parameters for passing into WebWorkers
  * @public
  * @param {Object} params The given Items to filter
- * @return {Object} WebWorker-passable items
+ * @returns {Object} WebWorker-passable items
  */
 function getTransferableParams(...params: any): any {
 	return (
@@ -41,7 +41,7 @@ function getTransferableParams(...params: any): any {
  * @param {string} path file to request
  * @param {string} resType type of data to request (default = arraybuffer)
  * @param {string} owMime force-override mime-type (optional)
- * @return {Object} XMLHttpRequest.response (converted to resType)
+ * @returns {Object} XMLHttpRequest.response (converted to resType)
  */
 function myFetch(
 	path: string,

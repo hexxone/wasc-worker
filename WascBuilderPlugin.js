@@ -154,7 +154,7 @@ class WascBuilderPlugin {
 	 * @param {strring} basedir start directory
 	 * @param {string} subDir sub directory
 	 * @param {array} arrayOfFiles result files
-	 * @return {string[]} arrayOfFiles
+	 * @returns {string[]} arrayOfFiles
 	 */
 	getAllFiles(basedir, subDir = "", arrayOfFiles = []) {
 		const sub = `${basedir}/${subDir}`;
@@ -176,7 +176,7 @@ class WascBuilderPlugin {
 	 * @param {string} trgt target file
 	 * @param {WebPack.Compilation} compilation ctx
 	 * @param {boolean} shared memory
-	 * @return {Promise<void>} prom
+	 * @returns {Promise<void>} prom
 	 */
 	doCompile(src, trgt, compilation, shared) {
 		return new Promise((resolve) => {
@@ -211,7 +211,7 @@ class WascBuilderPlugin {
 	 * @param {boolean} cleanup cleanup after compile ?
 	 * @param {boolean} sharedMem compile as shared mem module
 	 * @param {string} sharedMax maximum memory
-	 * @return {Promise} finished binary(s)
+	 * @returns {Promise} finished binary(s)
 	 */
 	compileWasm(
 		inputFilePath,

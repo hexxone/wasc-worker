@@ -47,7 +47,7 @@ const wasmSupport = (() => {
  * @param {boolean} shared shared mem?
  * @param {Object} options passed to the module init
  * @param {boolean} useWorker use worker or inline
- * @return {Promise<WascInterface>} the initialized context
+ * @returns {Promise<WascInterface>} the initialized context
  * @public
  */
 export function wascWorker(
@@ -97,7 +97,7 @@ export function wascWorker(
  * @param {number} memSize initial memory pages *(64KiB)
  * @param {boolean} shared shared mem?
  * @param {Object} options import Objects
- * @return {Promise<WascInterface>} module
+ * @returns {Promise<WascInterface>} module
  * @public
  */
 function loadInline(
@@ -142,7 +142,7 @@ function loadInline(
 				 * @warning This is potentially dangerous due to eval!
 				 * @param {string} func stringified function to eval inside worker context
 				 * @param {Object} params Data to pass in
-				 * @return {Object} eval result
+				 * @returns {Object} eval result
 				 */
 				const run = (func, ...params) => {
 					return new Promise((res_) => {
@@ -181,7 +181,7 @@ function loadInline(
  * @param {number} memSize initial memory pages
  * @param {boolean} shared shared mem?
  * @param {Object} options import Objects
- * @return {Promise<WascInterface>} module
+ * @returns {Promise<WascInterface>} module
  * @public
  */
 function loadWorker(

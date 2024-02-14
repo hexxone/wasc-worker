@@ -42,7 +42,7 @@ export class WascLoader {
 
 	/**
 	 * Handle missing runtimme error
-	 * @return {void} Error
+	 * @returns {void} Error
 	 */
 	private err_noRuntime(): void {
 		throw Error(this.E_NOEXPORTRUNTIME);
@@ -52,7 +52,7 @@ export class WascLoader {
 	 * Gets a string from an U32 and an U16 view on a memory.
 	 * @param {ArrayBuffer} buffer memory
 	 * @param {number} ptr to data
-	 * @return {string} impl
+	 * @returns {string} impl
 	 */
 	private getStringImpl(buffer: ArrayBuffer, ptr: number): string {
 		const len = new Uint32Array(buffer)[(ptr + this.SIZE_OFFSET) >>> 2] >>> 1;
@@ -66,7 +66,7 @@ export class WascLoader {
 	/**
 	 * Prepares the base module prior to instantiation.
 	 * @param {any} imports to instantiate
-	 * @return {Object} instance
+	 * @returns {Object} instance
 	 */
 	private preInstantiate(imports: any): object {
 		// console.log('[WascLoader] preInstantiate', imports);
@@ -115,7 +115,7 @@ export class WascLoader {
 	 * Prepares the final module once instantiation is complete.
 	 * @param {any} extendedExports module exports
 	 * @param {WebAssembly.Instance} instance module instance
-	 * @return {ASUtil} interface
+	 * @returns {ASUtil} interface
 	 * @public
 	 */
 	public postInstantiate(
@@ -147,7 +147,7 @@ export class WascLoader {
 		/**
 		 * Gets the runtime type info for the given id.
 		 * @param {number} id internal Type ID
-		 * @return {number} info
+		 * @returns {number} info
 		 */
 		const getInfo = (id: number): number => {
 			const U32 = new Uint32Array(memory.buffer);
@@ -159,7 +159,7 @@ export class WascLoader {
 		/**
 		 * Gets and validate runtime type info for the given id for array like objects
 		 * @param {number} id
-		 * @return {number} info
+		 * @returns {number} info
 		 */
 		const getArrayInfo = (id: number): number => {
 			const info = getInfo(id);
@@ -171,7 +171,7 @@ export class WascLoader {
 		/**
 		 * Gets the runtime base id for the given id.
 		 * @param {number} id
-		 * @return {number} info
+		 * @returns {number} info
 		 */
 		const getBase = (id: number): number => {
 			const U32 = new Uint32Array(memory.buffer);
@@ -183,7 +183,7 @@ export class WascLoader {
 		/**
 		 * Gets the runtime alignment of a collection's values.
 		 * @param {number} info i
-		 * @return {number} lul
+		 * @returns {number} lul
 		 */
 		const getValueAlign = (info: number): number => {
 			return 31 - Math.clz32((info >>> this.VAL_ALIGN_OFFSET) & 31); // -1 if none
@@ -194,7 +194,7 @@ export class WascLoader {
 		 * @param {number} alignLog2
 		 * @param {number} signed
 		 * @param {number} float
-		 * @return {any} lul
+		 * @returns {any} lul
 		 */
 		const getView = (
 			alignLog2: number,
@@ -229,7 +229,7 @@ export class WascLoader {
 		 * @param {any} Type constructor
 		 * @param {number} alignLog2
 		 * @param {number} ptr
-		 * @return {Array} typed
+		 * @returns {Array} typed
 		 */
 		const getTypedArray = (
 			Type: any,
@@ -244,7 +244,7 @@ export class WascLoader {
 		 * @param {any} Type constructor
 		 * @param {number} alignLog2
 		 * @param {number} ptr
-		 * @return {ArrayView} typedView
+		 * @returns {ArrayView} typedView
 		 */
 		const getTypedArrayView = (
 			Type: any,
@@ -266,7 +266,7 @@ export class WascLoader {
 		 * @param {Object} ctor
 		 * @param {string} name
 		 * @param {number} align
-		 * @return {void}
+		 * @returns {void}
 		 */
 		const attachTypedArrayFunctions = (
 			ctor: object,
@@ -438,7 +438,7 @@ export class WascLoader {
 
 	/**
 	 * @param {Object} src src
-	 * @return {boolean} evalueate if param instanceof Fetch-Response
+	 * @returns {boolean} evalueate if param instanceof Fetch-Response
 	 */
 	private isResponse(src: object): boolean {
 		return typeof Response !== "undefined" && src instanceof Response;
@@ -446,7 +446,7 @@ export class WascLoader {
 
 	/**
 	 * @param {Object} src obj
-	 * @return {boolean} param instanceof WebAssembly.Module
+	 * @returns {boolean} param instanceof WebAssembly.Module
 	 */
 	private isModule(src: object): boolean {
 		return src instanceof WebAssembly.Module;
@@ -456,7 +456,7 @@ export class WascLoader {
 	 * Demangles an AssemblyScript module's exports to a friendly object structure.
 	 * @param {Object} exports of module
 	 * @param {Object} extendedExports to import
-	 * @return {ASUtil} processed exports
+	 * @returns {ASUtil} processed exports
 	 */
 	private demangle(exports: object, extendedExports: object = {}): ASUtil {
 		const setArgumentsLength = exports["__argumentsLength"]
@@ -583,7 +583,7 @@ export class WascLoader {
 	 * Asynchronously instantiates an AssemblyScript module from anything that can be instantiated.
 	 * @param {Response | WebAssembly.Module | BufferSource} source data
 	 * @param {WebAssembly.Imports} imports (optional)
-	 * @return {Promise<WascBasic>} interface
+	 * @returns {Promise<WascBasic>} interface
 	 * @public
 	 */
 	public async instantiate(
@@ -606,7 +606,7 @@ export class WascLoader {
 	 * Synchronously instantiates an AssemblyScript module from a WebAssembly.Module or binary buffer.
 	 * @param {Module | BufferSource} source data
 	 * @param {WebAssembly.Imports} imports (optional)
-	 * @return {WascBasic} interface
+	 * @returns {WascBasic} interface
 	 * @public
 	 */
 	public instantiateSync(
@@ -626,7 +626,7 @@ export class WascLoader {
 	 * Asynchronously instantiates an AssemblyScript module from a response, i.e. as obtained by `fetch`.
 	 * @param {Response} source data
 	 * @param {WebAssembly.Imports} imports (optional)
-	 * @return {Promise<WascBasic>} interface
+	 * @returns {Promise<WascBasic>} interface
 	 * @public
 	 */
 	public async instantiateStreaming(
