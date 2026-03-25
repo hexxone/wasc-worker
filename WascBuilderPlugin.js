@@ -116,50 +116,44 @@ class WascBuilderPlugin {
 
                     // Parallel compiling
                     await Promise.all(
-                        moduleFiles.map((moduleFile) => {
-                            // finally return Promise of module compilation
-                            // eslint-disable-next-line no-async-promise-executor
-                            return new Promise(async (resolve) => {
-                                const sName = moduleFile.replace(
-                                    /^.*[\\/]/,
-                                    ''
-                                );
+                        moduleFiles.map(async (moduleFile) => {
+                            const sName = moduleFile.replace(
+                                /^.*[\\/]/,
+                                ''
+                            );
 
-                                // change new file ext to ".wasm"
-                                let newName = sName.replace(/\.[^/.]+$/, '');
+                            // change new file ext to ".wasm"
+                            let newName = sName.replace(/\.[^/.]+$/, '');
 
-                                if (!newName.endsWith('.wasm')) {
-                                    newName += '.wasm';
-                                }
+                            if (!newName.endsWith('.wasm')) {
+                                newName += '.wasm';
+                            }
 
+                            console.log(
+                                `[${pluginName}] Compiling normally: '${moduleFile}'.`
+                            );
+                            await this.doCompile(
+                                basedir + moduleFile,
+                                newName,
+                                compilation
+                            );
+
+                            if (this.options.shared === true) {
                                 console.log(
-                                    `[${pluginName}] Compiling normally: '${moduleFile}'.`
+                                    `[${pluginName}] Compiling with shared memory: '${moduleFile}'.`
                                 );
+                                const shName = newName.replace(
+                                    '.wasm',
+                                    '.shared.wasm'
+                                );
+
                                 await this.doCompile(
                                     basedir + moduleFile,
-                                    newName,
-                                    compilation
+                                    shName,
+                                    compilation,
+                                    true
                                 );
-
-                                if (this.options.shared === true) {
-                                    console.log(
-                                        `[${pluginName}] Compiling with shared memory: '${moduleFile}'.`
-                                    );
-                                    const shName = newName.replace(
-                                        '.wasm',
-                                        '.shared.wasm'
-                                    );
-
-                                    await this.doCompile(
-                                        basedir + moduleFile,
-                                        shName,
-                                        compilation,
-                                        true
-                                    );
-                                }
-
-                                resolve();
-                            });
+                            }
                         })
                     );
 
@@ -172,7 +166,7 @@ class WascBuilderPlugin {
     /**
      * @ignore
      * list files recursively
-     * @param {strring} basedir start directory
+     * @param {string} basedir start directory
      * @param {string} subDir sub directory
      * @param {array} arrayOfFiles result files
      * @returns {string[]} arrayOfFiles
@@ -197,43 +191,40 @@ class WascBuilderPlugin {
     /**
      * Internal compiler shorthand
      * @param {string} src source compile
-     * @param {string} trgt target file
-     * @param {WebPack.Compilation} compilation ctx
+     * @param {string} target target file
+     * @param {Compilation} compilation ctx
      * @param {boolean} shared memory
      * @returns {Promise<void>} prom
      */
-    doCompile(src, trgt, compilation, shared) {
-        return new Promise((resolve) => {
-            this.compileWasm(
-                src,
-                trgt,
-                this.options.production,
-                this.options.cleanup,
-                shared
-            ).then(async ({ normal, map }) => {
-                // emit files into compilation
-                if (normal) {
-                    await compilation.emitAsset(trgt, new RawSource(normal));
-                }
-                if (map) {
-                    await compilation.emitAsset(
-                        `${trgt}.map`,
-                        new RawSource(map)
-                    );
-                }
+    async doCompile(src, target, compilation, shared) {
+        const { normal, map } = await this.compileWasm(
+            src,
+            target,
+            this.options.production,
+            this.options.cleanup,
+            shared
+        );
 
-                console.info(`[${pluginName}] Success: ${trgt}`);
+        // emit files into compilation
+        if (normal) {
+            compilation.emitAsset(target, new RawSource(normal));
+        }
 
-                resolve();
-            });
-        });
+        if (map) {
+            compilation.emitAsset(
+                `${target}.map`,
+                new RawSource(map)
+            );
+        }
+
+        console.info(`[${pluginName}] Success: ${target}`);
     }
 
     /**
      * @ignore
      * compile assemblyscript (typescript) module to wasm and return binary
      * @param {string} inputFilePath module to compile
-     * @param {strring} outFile target name
+     * @param {string} outFile target name
      * @param {boolean} production create symbols/map ?
      * @param {boolean} cleanup cleanup after compile ?
      * @param {boolean} sharedMem compile as shared mem module

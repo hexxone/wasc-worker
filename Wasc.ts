@@ -13,11 +13,11 @@ import { Smallog } from '../Smallog';
 import { WascInterface } from './WascInterface';
 import { WascLoader } from './WascLoader';
 import { WascUtil } from './WascUtil';
+import WascWorker from 'worker-loader!./Wasc.worker';
 
 const LOGHEAD = '[WASC] ';
 const NO_SUPP = '>>> WebAssembly failed! Initialization cannot continue. <<<';
 
-import WascWorker from 'worker-loader!./Wasc.worker';
 // const WascWorker = () => new Worker(new URL("./Wasc.worker.js", import.meta.url));
 
 const wasmSupport = (() => {
@@ -52,48 +52,37 @@ const wasmSupport = (() => {
  * @returns {Promise<WascInterface>} the initialized context
  * @public
  */
-export function wascWorker(
+export async function wascWorker(
     source: string,
-    memSize = 4096,
-    shared = false,
+    memSize: number = 4096,
+    shared: boolean = false,
     options: any = {},
-    useWorker = true
+    useWorker: boolean = true
 ): Promise<WascInterface> {
-    return new Promise((resolve, reject) => {
-        if (!wasmSupport) {
-            reject(NO_SUPP);
+    if (!wasmSupport) {
+        throw new Error(NO_SUPP);
+    }
+    // decide whether to use worker-threading or inline embedding.
+    const isWorkerSupported = typeof Worker !== 'undefined';
 
-            return;
-        }
-        // decide whether to use worker-threading or inline embedding.
-        const hasWrk = typeof Worker !== 'undefined';
-
-        if (useWorker && !hasWrk) {
-            Smallog.error(
-                'WebWorkers are not supported? Using inline loading as fallback...'
-            );
-        }
-        const loadWrk = useWorker && hasWrk;
-
-        Smallog.debug(
-            `Loading ${source} as ${
-                loadWrk ? 'worker' : 'inline'
-            } with data=${JSON.stringify(options)}`,
-            LOGHEAD
+    if (useWorker && !isWorkerSupported) {
+        Smallog.error(
+            'WebWorkers are not supported? Using inline loading as fallback...'
         );
-        // initialize the actual module
-        const doLoad = loadWrk ? loadWorker : loadInline;
+    }
+    const loadAsWorker = useWorker && isWorkerSupported;
 
-        doLoad(source, memSize, shared, options)
-            .then((loaded) => {
-                resolve(loaded);
-            })
-            .catch((err) => {
-                // something went south?
-                Smallog.error(`init error: ${err}`, LOGHEAD);
-                reject(err);
-            });
-    });
+    Smallog.debug(
+        `Loading ${source} as ${
+            loadAsWorker ? 'worker' : 'inline'
+        } with data=${JSON.stringify(options)}`,
+        LOGHEAD
+    );
+
+    // initialize the actual module
+    const doLoad = loadAsWorker ? loadWorker : loadInline;
+
+    return await doLoad(source, memSize, shared, options);
 }
 
 /**
@@ -108,85 +97,78 @@ export function wascWorker(
  * @returns {Promise<WascInterface>} module
  * @public
  */
-function loadInline(
+async function loadInline(
     path: string,
     memSize: number,
-    shared = false,
+    shared: boolean = false,
     options?: any
 ): Promise<WascInterface> {
-    return new Promise((resolve) => {
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer/Planned_changes
-        const memory = new WebAssembly.Memory({
-            initial: memSize,
-            maximum: memSize,
-            shared
-        });
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer/Planned_changes
+    const memory = new WebAssembly.Memory({
+        initial: memSize,
+        maximum: memSize,
+        shared
+    });
 
-        /**
-         * gather imports
-         * @public
-         */
-        let myImports = {
-            env: {
-                memory,
-                logf(value) {
-                    console.log(`F64: ${value}`);
-                },
-                logi(value) {
-                    console.log(`U32: ${value}`);
-                }
+    /**
+     * gather imports
+     * @public
+     */
+    let myImports = {
+        env: {
+            memory,
+            logf(value) {
+                console.log(`F64: ${value}`);
+            },
+            logi(value) {
+                console.log(`U32: ${value}`);
             }
-        };
-
-        const { getImportObject } = options;
-
-        if (getImportObject) {
-            myImports = Object.assign(myImports, getImportObject);
         }
+    };
 
-        // get & make module
-        return WascUtil.myFetch(path)
-            .then((res) => {
-                return new WascLoader().instantiate(res, myImports);
-            })
-            .then((inst) => {
-                // eslint-disable-next-line no-trailing-spaces
+    const { getImportObject } = options;
 
-                /**
-                 * Run a function inside the worker.
-                 * @warning This is potentially dangerous due to eval!
-                 * @param {string} func stringified function to eval inside worker context
-                 * @param {Object} params Data to pass in
-                 * @returns {Object} eval result
-                 */
-                const run = (func, ...params) => {
-                    return new Promise((res_) => {
-                        const fun_ = new Function(`return ${func}`)();
+    if (getImportObject) {
+        myImports = Object.assign(myImports, getImportObject);
+    }
 
-                        res_(
-                            fun_({
-                                module: inst.module,
-                                instance: inst.instance,
-                                exports: inst.exports,
-                                params
-                            })
-                        );
-                    });
-                };
+    // get & make module
+    const fetchResult = await WascUtil.myFetch(path);
+    const instance = await new WascLoader().instantiate(fetchResult, myImports);
 
-                // we done here
-                resolve({
-                    shared: shared
-                        ? new WascLoader().postInstantiate({}, {
-                            exports: {
-                                memory
-                            }
-                        } as any)
-                        : null,
-                    exports: inst.exports,
-                    run
-                });
-            });
+    /**
+     * Run a function inside the worker.
+     * @warning This is potentially dangerous due to eval!
+     * @param {string} func stringified function to eval inside worker context
+     * @param {Object} params Data to pass in
+     * @returns {Object} eval result
+     */
+    const run = (func, ...params) => {
+        return new Promise((res_) => {
+            const fun_ = new Function(`return ${func}`)();
+
+            res_(
+                fun_({
+                    module: instance.module,
+                    instance: instance.instance,
+                    exports: instance.exports,
+                    params
+                })
+            );
+        });
+    };
+
+    // we done here
+    return Promise.resolve<WascInterface>({
+        shared: shared
+            ? new WascLoader().postInstantiate({}, {
+                exports: {
+                    memory
+                }
+            } as any)
+            : null,
+        exports: instance.exports,
+        run
     });
 }
 
@@ -205,7 +187,7 @@ function loadInline(
 function loadWorker(
     source: string,
     memSize: number,
-    shared = false,
+    shared: boolean = false,
     options?: any
 ): Promise<WascInterface> {
     return new Promise((...reslv) => {
@@ -256,8 +238,7 @@ function loadWorker(
                                         worker.postMessage(
                                             {
                                                 id: promCnt,
-                                                action: WascUtil.ACTIONS
-                                                    .CALL_FUNCTION_EXPORT,
+                                                action: WascUtil.ACTIONS.CALL_FUNCTION_EXPORT,
                                                 payload: {
                                                     func: exp,
                                                     params

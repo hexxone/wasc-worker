@@ -44,27 +44,32 @@ function getTransferableParams(...params: any): any {
  * @param {string} owMime force-override mime-type (optional)
  * @returns {Object} XMLHttpRequest.response (converted to resType)
  */
-function myFetch(
+async function myFetch(
     path: string,
-    resType = 'arraybuffer',
+    resType: XMLHttpRequestResponseType = 'arraybuffer',
     owMime?: string
 ): Promise<any> {
-    return new Promise((res) => {
-        const request = new XMLHttpRequest();
+    const headers = new Headers();
 
-        request.open('GET', path);
-        if (owMime) {
-            request.overrideMimeType(owMime);
-        }
-        request.responseType = resType as any;
-        request.onload = () => {
-            if (request.status !== 200) {
-                console.error(request);
-            }
-            res(request.response);
-        };
-        request.send();
+    if (owMime) {
+        headers.set('Accept', owMime);
+    }
+
+    const response = await fetch(path, {
+        headers
     });
+
+    if (!response.ok) {
+        console.error(`myFetch failed: ${response.status} ${response.statusText}`, path);
+    }
+
+    switch (resType) {
+        case 'arraybuffer': return response.arrayBuffer();
+        case 'blob': return response.blob();
+        case 'json': return response.json();
+        case 'text': return response.text();
+        default: return response.arrayBuffer();
+    }
 }
 
 export const WascUtil = {
