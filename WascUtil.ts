@@ -46,7 +46,7 @@ function getTransferableParams(...params: any): any {
  */
 async function myFetch(
     path: string,
-    resType: XMLHttpRequestResponseType = 'arraybuffer',
+    resType: XMLHttpRequestResponseType | 'response' = 'arraybuffer',
     owMime?: string
 ): Promise<any> {
     const headers = new Headers();
@@ -61,6 +61,10 @@ async function myFetch(
 
     if (!response.ok) {
         console.error(`myFetch failed: ${response.status} ${response.statusText}`, path);
+    }
+
+    if (resType === 'response') {
+        return response;
     }
 
     switch (resType) {

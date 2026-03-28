@@ -76,7 +76,7 @@ class WascBuilderPlugin {
 
         // Specify the event hook to attach to
         compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
-            return compilation.hooks.processAssets.tap(
+            return compilation.hooks.processAssets.tapPromise(
                 {
                     name: pluginName,
                     stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL

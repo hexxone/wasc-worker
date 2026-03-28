@@ -133,7 +133,7 @@ async function loadInline(
     }
 
     // get & make module
-    const fetchResult = await WascUtil.myFetch(path);
+    const fetchResult = await WascUtil.myFetch(path, 'response');
     const instance = await new WascLoader().instantiate(fetchResult, myImports);
 
     /**

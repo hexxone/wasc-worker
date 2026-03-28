@@ -90,9 +90,9 @@ wascw.addEventListener('message', (e) => {
                     }
 
                     // make webassembly
-                    const byteModule = await WascUtil.myFetch(source);
+                    const wasmResponse = await WascUtil.myFetch(source, 'response');
                     const inst = await new WascLoader().instantiate(
-                        byteModule,
+                        wasmResponse,
                         ascImports
                     );
 
