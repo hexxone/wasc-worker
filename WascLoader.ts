@@ -109,7 +109,7 @@ export class WascLoader {
                 const memory: WebAssembly.Memory
                     = extendedExports.memory || env.memory;
 
-                console.log(
+                console.debug(
                     `trace: ${getString(memory, msg)}${n ? ' ' : ''}${args
                         .slice(0, n)
                         .join(', ')}`
